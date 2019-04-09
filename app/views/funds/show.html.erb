@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @fund.name %>
+</p>
+
+<p>
+  <strong>Strategy:</strong>
+  <%= @fund.strategy %>
+</p>
+
+<p>
+  <strong>Aum:</strong>
+  <%= @fund.AUM %>
+</p>
+
+<p>
+  <strong>Inception:</strong>
+  <%= @fund.inception %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @fund.user %>
+</p>
+
+<%= link_to 'Edit', edit_fund_path(@fund) %> |
+<%= link_to 'Back', funds_path %>

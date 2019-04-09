@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Ticker:</strong>
+  <%= @position.ticker %>
+</p>
+
+<p>
+  <strong>Termination:</strong>
+  <%= @position.termination %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @position.user %>
+</p>
+
+<p>
+  <strong>Fund:</strong>
+  <%= @position.fund %>
+</p>
+
+<%= link_to 'Edit', edit_position_path(@position) %> |
+<%= link_to 'Back', positions_path %>
