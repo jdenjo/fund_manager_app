@@ -12,7 +12,7 @@
 
 <p>
   <strong>Aum:</strong>
-  <%= @fund.AUM %>
+  $<%= number_with_delimiter(@fund.AUM, :delimiter => ',') %>
 </p>
 
 <p>
@@ -21,9 +21,51 @@
 </p>
 
 <p>
-  <strong>User:</strong>
-  <%= @fund.user %>
+  <strong>Portfolio Manager:</strong>
+  <%= @fund.pm.first_name + " " + @fund.pm.last_name %>
 </p>
+
+<h1>Positions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ticker</th>
+      <th>Entry</th>
+      <th>Price</th>
+      <th>Shares</th>
+      <th>Analyst</th>
+      <th>Fund</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @fund.positions.each do |position| %>
+
+      <tr class="position-row">
+        <td><%= position.ticker %></td>
+        <td><%= position.created_at %></td>
+        <td></td>
+        <td><%= @totals["#{position.id}"]["total"] %></td>
+        <td><%= position.user.email %></td>
+        <td><%= position.fund.name %></td>
+        <td><%= link_to 'Show', position %></td>
+        <td><%= link_to 'Edit', edit_position_path(position) %></td>
+        <td><%= link_to 'Close Position', position, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+      <% position.transactions.each do |transaction| %>
+      <tr> 
+      <td></td>
+      <td><%= transaction.created_at %></td>
+        <td><%= transaction.price %></td>
+        <td><%= number_with_delimiter(transaction.shares, :delimiter => ',') %></td>
+      </tr>
+            
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
 
 <%= link_to 'Edit', edit_fund_path(@fund) %> |
 <%= link_to 'Back', funds_path %>

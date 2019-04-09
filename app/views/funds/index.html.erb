@@ -1,4 +1,3 @@
-<p id="notice"><%= notice %></p>
 
 <h1>Funds</h1>
 
@@ -9,7 +8,7 @@
       <th>Strategy</th>
       <th>Aum</th>
       <th>Inception</th>
-      <th>User</th>
+      <th>PM</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -21,7 +20,7 @@
         <td><%= fund.strategy %></td>
         <td><%= fund.AUM %></td>
         <td><%= fund.inception %></td>
-        <td><%= fund.user.email %></td>
+        <td><%= fund.pm.first_name + " " + fund.pm.last_name %></td>
         <td><%= link_to 'Show', fund %></td>
         <td><%= link_to 'Edit', edit_fund_path(fund) %></td>
         <td><%= link_to 'Destroy', fund, method: :delete, data: { confirm: 'Are you sure?' } %></td>

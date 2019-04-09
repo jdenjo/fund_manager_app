@@ -93,11 +93,12 @@ users = User.all
 
 fundAmount.times do |i|
   inception = Faker::Date.backward(365 * 5)
+  status = ["executing", "active", "finished"]
 
   Fund.create(
     name: funds[i],
     strategy: strategies[i],
-    user: users.sample,
+    pm: users.sample,
     AUM: rand(500000000..2000000000),
     inception: inception,
   )
@@ -119,6 +120,7 @@ fundAmount.times do |i|
         shares: rand(1000..100000),
         position: Position.last,
         reason: "Catalyst upcoming",
+        status: status.sample,
       )
     end
   end

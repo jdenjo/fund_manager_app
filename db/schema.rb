@@ -20,10 +20,9 @@ ActiveRecord::Schema.define(version: 2019_04_09_002747) do
     t.text "strategy"
     t.float "AUM"
     t.datetime "inception"
-    t.bigint "user_id"
+    t.integer "pm_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_funds_on_user_id"
   end
 
   create_table "positions", force: :cascade do |t|
@@ -61,7 +60,6 @@ ActiveRecord::Schema.define(version: 2019_04_09_002747) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "funds", "users"
   add_foreign_key "positions", "funds"
   add_foreign_key "transactions", "positions"
 end

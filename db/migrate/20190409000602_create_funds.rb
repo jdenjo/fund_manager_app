@@ -5,7 +5,7 @@ class CreateFunds < ActiveRecord::Migration[5.2]
       t.text :strategy
       t.float :AUM
       t.datetime :inception
-      t.references :user, foreign_key: true
+      t.integer :pm_id
       t.timestamps
     end
   end

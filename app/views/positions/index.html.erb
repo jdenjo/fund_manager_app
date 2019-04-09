@@ -7,7 +7,6 @@
     <tr>
       <th>Ticker</th>
       <th>Created at</th>
-      <th>Termination</th>
       <th>User</th>
       <th>Fund</th>
       <th colspan="4"></th>
@@ -19,7 +18,6 @@
       <tr>
         <td><%= position.ticker %></td>
         <td><%= position.created_at %></td>
-        <td><%= position.termination %></td>
         <td><%= position.user.email %></td>
         <td><%= position.fund.name %></td>
         <td><%= link_to 'Show', position %></td>

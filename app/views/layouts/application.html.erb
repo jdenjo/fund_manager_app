@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>**** Your Title Here ****</title>
+  <title>Fund Manager</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   <%= stylesheet_link_tag    'application', media: 'all' %>
@@ -24,7 +24,7 @@
             <li class="nav-item active"> <%= link_to("Users", users_path, :class=>"nav-link")  %> </li>
             <li class="nav-item active"> <%= link_to("Funds", funds_path, :class=>"nav-link")  %> </li>
             <li class="nav-item active"> <%= link_to("Positions", positions_path, :class=>"nav-link")  %> </li>
-            <li class="nav-item active"> <%= link_to("Transactions", positions_path, :class=>"nav-link")  %> </li>
+            <li class="nav-item active"> <%= link_to("Transactions", transactions_path, :class=>"nav-link")  %> </li>
           </ul>
         </div>
       </nav>

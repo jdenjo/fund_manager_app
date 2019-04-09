@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/' , to: 'welcome#home', as: 'home'
   resources :transactions
   resources :positions
   resources :funds
