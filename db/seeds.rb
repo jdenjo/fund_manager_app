@@ -38,55 +38,37 @@ end
 strategies = ["Activist", "Long Short Alpha", "Fundamental Value", "small mid caps", "Alpha capture", "Distressed", "Fundamental Growth", "Multi-strategy"]
 funds = ["Fund A", "Fund B", "Fund C", "Fund D", "Fund E"]
 
+stocks = StockQuote::Stock.raw_quote("aapl,tsla")
+
 tickers = [
   "APL",
   "GOOG",
   "AMZN",
   "MSFT",
-  "INTC",
-  "BAC",
   "NFLX",
   "TSLA",
   "GOOGL",
   "GE",
   "NKE",
-  "ACB",
-  "BRK.A",
-  "XOM",
-  "WMT",
-  "LUV",
-  "C",
-  "QQQ",
-  "BRK.B",
   "AMD",
-  "S",
-  "TTM",
-  "DIS",
-  "PFE",
-  "BA",
   "BABA",
-  "CHK",
-  "HPQ",
-  "TXN",
-  "NIO",
-  "MMM",
-  "NVDA",
-  "CMCSA",
-  "TGT",
-  "VZ",
-  "ECA",
-  "SYMC",
-  "MRK",
-  "A",
-  "BIDU",
-  "PBR",
-  "NOK",
-  "BMY",
-  "WFC",
   "ROKU",
-  "CSCO",
-  "SLG",
 ]
+
+stocks = StockQuote::Stock.raw_quote(
+  "APL,
+    GOOG,
+    AMZN,
+    MSFT,
+    NFLX,
+    TSLA,
+    GOOGL,
+    GE,
+    NKE,
+    AMD,
+    BABA,
+    ROKU"
+)
 
 fundAmount = funds.length - 1
 users = User.all
@@ -103,7 +85,7 @@ fundAmount.times do |i|
     inception: inception,
   )
 
-  10.times do
+  5.times do
     tickerData = tickers.sample
     userData = users.sample
 
@@ -113,12 +95,12 @@ fundAmount.times do |i|
       fund: Fund.last,
     )
 
-    noPositions = rand(1...10)
+    noPositions = rand(1...5)
 
     noPositions.times do
       Transaction.create(
         ticker: tickerData,
-        price: rand(10..100),
+        price: stocks[tickerData]["quote"]["latestPrice"] * rand(0.8..1.3),
         shares: rand(1000..100000),
         position: Position.last,
         reason: "Catalyst upcoming",

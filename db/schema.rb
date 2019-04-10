@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 2019_04_09_002747) do
 
   create_table "positions", force: :cascade do |t|
     t.string "ticker"
+    t.string "sector"
     t.datetime "termination"
     t.bigint "user_id"
     t.bigint "fund_id"
