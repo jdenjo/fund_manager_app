@@ -70,13 +70,16 @@ class FundsController < ApplicationController
     p @fund.positions[0].transactions
     @fund.positions.each do |p|
       count = 0
+      cost = 0
       share_total = 0
       @totals["#{p.id}"] = {}
       p.transactions.each do |t|
+        cost += (t.shares * t.price)
         count += 1
         share_total += t.shares
       end
       @totals["#{p.id}"]["total"] = share_total
+      @totals["#{p.id}"]["average"] = cost / share_total
     end
   end
 

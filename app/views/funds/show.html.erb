@@ -29,11 +29,14 @@
 
 <table>
   <thead>
-    <tr>
+    <tr class="table-header">
+      <th />
       <th>Ticker</th>
       <th>Entry</th>
-      <th>Price</th>
+      <th>Cost </th>
+      <th>Spot</th>
       <th>Shares</th>
+
       <th>Analyst</th>
       <th>Fund</th>
       <th colspan="4"></th>
@@ -42,13 +45,14 @@
 
   <tbody>
     <% @fund.positions.each do |position| %>
-
       <tr class="position-row">
-        <td><%= position.ticker %></td>
-        <td><%= position.created_at %></td>
+      <td> + </td>
+        <td><a href="https://ca.finance.yahoo.com/quote/<%=position.ticker%>"> <%= position.ticker %></a></td>
+        <td><%= position.created_at.strftime("%d/%m/%Y")  %></td>
+        <td><%= number_to_currency(@totals["#{position.id}"]["average"]) %></td>
         <td></td>
-        <td><%= @totals["#{position.id}"]["total"] %></td>
-        <td><%= position.user.email %></td>
+        <td><%= number_with_delimiter(@totals["#{position.id}"]["total"], :delimiter => ',') %> </td>
+        <td><%= position.user.first_name + " " + position.user.last_name %></td>
         <td><%= position.fund.name %></td>
         <td><%= link_to 'Show', position %></td>
         <td><%= link_to 'Edit', edit_position_path(position) %></td>
@@ -56,9 +60,11 @@
       </tr>
       <% position.transactions.each do |transaction| %>
       <tr> 
-      <td></td>
-      <td><%= transaction.created_at %></td>
-        <td><%= transaction.price %></td>
+      <td />
+      <td />
+      <td><%= transaction.created_at.strftime("%d/%m/%Y")  %></td>
+        <td><%= number_to_currency(transaction.price) %></td>
+        <td />
         <td><%= number_with_delimiter(transaction.shares, :delimiter => ',') %></td>
       </tr>
             

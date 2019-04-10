@@ -17,3 +17,8 @@
  .position-row{
      font-weight: bold
  }
+
+ .table-header{
+     font-weight: bold;
+     font-size: 14px;
+ }
