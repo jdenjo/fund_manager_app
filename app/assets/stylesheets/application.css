@@ -24,8 +24,12 @@
  }
 
  .page-contents{
-     width: 80%;
-     margin-left: 100px;
-     margin-right: 100px;
 
+     margin-left: 5%;
+     margin-right: 5%;
+
+ }
+
+ .fund-card{
+     margin-bottom: 20px;
  }

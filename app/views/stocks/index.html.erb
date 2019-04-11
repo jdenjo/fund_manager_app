@@ -1,0 +1,79 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Stocks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Quote</th>
+      <th>Companyname</th>
+      <th>Primaryexchange</th>
+      <th>Sector</th>
+      <th>Calculationprice</th>
+      <th>Open</th>
+      <th>Close</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Latestprice</th>
+      <th>Latestsource</th>
+      <th>Latesttime</th>
+      <th>Latestvolume</th>
+      <th>Iexrealtimeprice</th>
+      <th>Previousclose</th>
+      <th>Changepercent</th>
+      <th>Iexvolume</th>
+      <th>Avgtotalvolume</th>
+      <th>Iexbidprice</th>
+      <th>Iexbidsize</th>
+      <th>Iexaskprice</th>
+      <th>Iexasksize</th>
+      <th>Marketcap</th>
+      <th>Peratio</th>
+      <th>Week52high</th>
+      <th>Week52low</th>
+      <th>Ytdchange</th>
+      <th>Position</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stocks.each do |stock| %>
+      <tr>
+        <td><%= stock.symbol %></td>
+        <td><%= stock.companyName %></td>
+        <td><%= stock.primaryExchange %></td>
+        <td><%= stock.sector %></td>
+        <td><%= stock.open %></td>
+        <td><%= stock.close %></td>
+        <td><%= stock.high %></td>
+        <td><%= stock.low %></td>
+        <td><%= stock.latestPrice %></td>
+        <td><%= stock.latestTime %></td>
+        <td><%= stock.latestVolume %></td>
+        <td><%= stock.iexRealTimePrice %></td>
+        <td><%= stock.previousClose %></td>
+        <td><%= stock.changePercent %></td>
+        <td><%= stock.iexVolume %></td>
+        <td><%= stock.avgTotalVolume %></td>
+        <td><%= stock.iexBidPrice %></td>
+        <td><%= stock.iexBidSize %></td>
+        <td><%= stock.iexAskPrice %></td>
+        <td><%= stock.iexAskSize %></td>
+        <td><%= stock.marketCap %></td>
+        <td><%= stock.peRatio %></td>
+        <td><%= stock.week52High %></td>
+        <td><%= stock.week52Low %></td>
+        <td><%= stock.ytdChange %></td>
+        <td><%= stock.position %></td>
+        <td><%= link_to 'Show', stock %></td>
+        <td><%= link_to 'Edit', edit_stock_path(stock) %></td>
+        <td><%= link_to 'Destroy', stock, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Stock', new_stock_path %>

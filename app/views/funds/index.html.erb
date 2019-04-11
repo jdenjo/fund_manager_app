@@ -1,34 +1,22 @@
+<div class="card-deck">
+<div class="row">
+<% @funds.each do |fund| %>
+ <div class="col-sm-4 fund-card">
+  <div class="card">
+    <div class="card-header"><%= fund.name %></div>
+    <div class="card-body">
+      <p><%= fund.strategy %></p>
+      <p><%= fund.AUM %></p>
+      <p><%= fund.inception %></p>
+      <p><%= fund.pm.first_name + " " + fund.pm.last_name %></p>
+      <p><%= link_to 'Show', fund %> | <%= link_to 'Edit', edit_fund_path(fund) %> | <%= link_to 'Destroy', fund, method: :delete, data: { confirm: 'Are you sure?' } %></p>
+    </div>
+  </div>
+  </div>
 
-<h1>Funds</h1>
+<% end %>
+</div>
+</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Strategy</th>
-      <th>Aum</th>
-      <th>Inception</th>
-      <th>PM</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @funds.each do |fund| %>
-      <tr>
-        <td><%= fund.name %></td>
-        <td><%= fund.strategy %></td>
-        <td><%= fund.AUM %></td>
-        <td><%= fund.inception %></td>
-        <td><%= fund.pm.first_name + " " + fund.pm.last_name %></td>
-        <td><%= link_to 'Show', fund %></td>
-        <td><%= link_to 'Edit', edit_fund_path(fund) %></td>
-        <td><%= link_to 'Destroy', fund, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
+<br />
 <%= link_to 'New Fund', new_fund_path %>

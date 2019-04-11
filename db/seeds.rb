@@ -8,6 +8,8 @@
 
 PASSWORD = "supersecret"
 
+Stock.destroy_all
+Transaction.destroy_all
 Position.destroy_all
 Fund.destroy_all
 User.destroy_all
@@ -38,10 +40,7 @@ end
 strategies = ["Activist", "Long Short Alpha", "Fundamental Value", "small mid caps", "Alpha capture", "Distressed", "Fundamental Growth", "Multi-strategy"]
 funds = ["Fund A", "Fund B", "Fund C", "Fund D", "Fund E"]
 
-stocks = StockQuote::Stock.raw_quote("aapl,tsla")
-
 tickers = [
-  "APL",
   "GOOG",
   "AMZN",
   "MSFT",
@@ -56,8 +55,7 @@ tickers = [
 ]
 
 stocks = StockQuote::Stock.raw_quote(
-  "APL,
-    GOOG,
+  "GOOG,
     AMZN,
     MSFT,
     NFLX,
@@ -70,22 +68,21 @@ stocks = StockQuote::Stock.raw_quote(
     ROKU"
 )
 
-fundAmount = funds.length - 1
 users = User.all
 
-fundAmount.times do |i|
+10.times do |i|
   inception = Faker::Date.backward(365 * 5)
   status = ["executing", "active", "finished"]
 
   Fund.create(
-    name: funds[i],
+    name: Faker::Space.moon + " Fund",
     strategy: strategies[i],
     pm: users.sample,
     AUM: rand(500000000..2000000000),
     inception: inception,
   )
 
-  5.times do
+  4.times do
     tickerData = tickers.sample
     userData = users.sample
 
@@ -110,52 +107,37 @@ fundAmount.times do |i|
   end
 end
 
-# tickers = [
-#   "NASDAQ :AAPL",
-#   "NASDAQ: GOOG",
-#   "NASDAQ: AMZN",
-#   "NASDAQ: MSFT",
-#   "NASDAQ: INTC",
-#   "BAC",
-#   "NASDAQ: NFLX",
-#   "NASDAQ: TSLA",
-#   "NASDAQ: GOOGL",
-#   "NYSE: GE",
-#   "NYSE: NKE",
-#   "NYSE: ACB",
-#   "NYSE: BRK.A",
-#   "NYSE: XOM",
-#   "NYSE: WMT",
-#   "NYSE: LUV",
-#   "NYSE: C",
-#   "NASDAQ: QQQ",
-#   "NYSE: BRK.B",
-#   "NASDAQ: AMD",
-#   "NYSE: S",
-#   "NYSE: TTM",
-#   "NYSE: DIS",
-#   "NYSE: PFE",
-#   "NYSE: BA",
-#   "NYSE: BABA",
-#   "NYSE: CHK",
-#   "NYSE: HPQ",
-#   "NASDAQ: TXN",
-#   "NYSE: NIO",
-#   "NYSE: MMM",
-#   "NASDAQ: NVDA",
-#   "NASDAQ: CMCSA",
-#   "NYSE: TGT",
-#   "NYSE: VZ",
-#   "NYSE: ECA",
-#   "NASDAQ: SYMC",
-#   "NYSE: MRK",
-#   "NYSE: A",
-#   "NASDAQ: BIDU",
-#   "NYSE: PBR",
-#   "NYSE: NOK",
-#   "NYSE: BMY",
-#   "NYSE: WFC",
-#   "NASDAQ: ROKU",
-#   "NASDAQ: CSCO",
-#   "NYSE: SLG",
-# ]
+# stocks = StockQuote::Stock.raw_quote("aapl,tsla")
+
+for i in 0..(tickers.length - 1)
+  if !(stocks[tickers[i]] == nil)
+    Stock.create(
+      symbol: stocks[tickers[i]]["quote"]["symbol"],
+      companyName: stocks[tickers[i]]["quote"]["companyName"],
+      primaryExchange: stocks[tickers[i]]["quote"]["primaryExchange"],
+      position: Position.last,
+      sector: stocks[tickers[i]]["quote"]["sector"],
+      open: stocks[tickers[i]]["quote"]["open"],
+      close: stocks[tickers[i]]["quote"]["close"],
+      high: stocks[tickers[i]]["quote"]["high"],
+      low: stocks[tickers[i]]["quote"]["low"],
+      latestPrice: stocks[tickers[i]]["quote"]["latestPrice"],
+      latestTime: stocks[tickers[i]]["quote"]["latestTime"],
+      latestVolume: stocks[tickers[i]]["quote"]["latestVolume"],
+      iexRealTimePrice: stocks[tickers[i]]["quote"]["iexRealTimePrice"],
+      previousClose: stocks[tickers[i]]["quote"]["previousClose"],
+      changePercent: stocks[tickers[i]]["quote"]["changePercent"],
+      iexVolume: stocks[tickers[i]]["quote"]["iexVolume"],
+      avgTotalVolume: stocks[tickers[i]]["quote"]["avgTotalVolume"],
+      iexBidPrice: stocks[tickers[i]]["quote"]["iexBidPrice"],
+      iexBidSize: stocks[tickers[i]]["quote"]["iexBidSize"],
+      iexAskPrice: stocks[tickers[i]]["quote"]["iexAskPrice"],
+      iexAskSize: stocks[tickers[i]]["quote"]["iexAskSize"],
+      marketCap: ((stocks[tickers[i]]["quote"]["marketCap"]).to_i / 1000000),
+      peRatio: stocks[tickers[i]]["quote"]["peRatio"],
+      week52High: stocks[tickers[i]]["quote"]["week52High"],
+      week52Low: stocks[tickers[i]]["quote"]["week52Low"],
+      ytdChange: stocks[tickers[i]]["quote"]["ytdChange"],
+    )
+  end
+end

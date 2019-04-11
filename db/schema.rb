@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_09_002747) do
+ActiveRecord::Schema.define(version: 2019_04_11_020800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,38 @@ ActiveRecord::Schema.define(version: 2019_04_09_002747) do
     t.datetime "updated_at", null: false
     t.index ["fund_id"], name: "index_positions_on_fund_id"
     t.index ["user_id"], name: "index_positions_on_user_id"
+  end
+
+  create_table "stocks", force: :cascade do |t|
+    t.string "symbol"
+    t.string "companyName"
+    t.string "primaryExchange"
+    t.string "sector"
+    t.float "open"
+    t.float "close"
+    t.float "high"
+    t.float "low"
+    t.float "latestPrice"
+    t.datetime "latestTime"
+    t.integer "latestVolume"
+    t.float "iexRealTimePrice"
+    t.float "previousClose"
+    t.float "changePercent"
+    t.integer "iexVolume"
+    t.integer "avgTotalVolume"
+    t.float "iexBidPrice"
+    t.integer "iexBidSize"
+    t.float "iexAskPrice"
+    t.integer "iexAskSize"
+    t.integer "marketCap"
+    t.float "peRatio"
+    t.float "week52High"
+    t.float "week52Low"
+    t.float "ytdChange"
+    t.bigint "position_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position_id"], name: "index_stocks_on_position_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -62,5 +94,6 @@ ActiveRecord::Schema.define(version: 2019_04_09_002747) do
   end
 
   add_foreign_key "positions", "funds"
+  add_foreign_key "stocks", "positions"
   add_foreign_key "transactions", "positions"
 end
