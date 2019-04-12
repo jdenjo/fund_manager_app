@@ -1,42 +1,7 @@
-<%= form_with(model: transaction, local: true) do |form| %>
-  <% if transaction.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(transaction.errors.count, "error") %> prohibited this transaction from being saved:</h2>
-
-      <ul>
-      <% transaction.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :shares %>
-    <%= form.number_field :shares %>
-  </div>
-
-  <div class="field">
-    <%= form.label :price %>
-    <%= form.text_field :price %>
-  </div>
-
-  <div>
-  Total Cost:
-  </div>
-  <div class="fund">
-    <%= form.label :fund %>
-    <%= form.text_field :fund %>
-  </div>
-
-
-
-  <div class="field">
-    <%= form.label :reason %>
-    <%= form.text_field :reason %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+<%= simple_form_for transaction do |f| %>
+  <%= f.input :shares, required: true %>
+  <%= f.input :price, required: true %>
+  <%= f.input :reason, required: true %>
+  <%= f.hidden_field :ticker, value: "AAPL" %>
+  <%= f.button :submit, class: 'btn btn-primary' %>
 <% end %>

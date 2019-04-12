@@ -26,6 +26,27 @@ class TransactionsController < ApplicationController
   def create
     @transaction = Transaction.new(transaction_params)
 
+    byebug
+
+    if Position.where(ticker: @transaction.ticker).exists?
+      @transaction.position = Position.where(ticker: @transaction.ticker)
+    else
+      Position.new()
+    end
+
+    # <ActionController::Parameters {"shares"=>"100", "price"=>"198.5", "reason"=>"Test"} permitted: true>
+    # create_table "positions", force: :cascade do |t|
+    #   t.string "ticker"
+    #   t.string "sector"
+    #   t.datetime "termination"
+    #   t.bigint "user_id"
+    #   t.bigint "fund_id"
+    #   t.datetime "created_at", null: false
+    #   t.datetime "updated_at", null: false
+    #   t.index ["fund_id"], name: "index_positions_on_fund_id"
+    #   t.index ["user_id"], name: "index_positions_on_user_id"
+    # end
+
     respond_to do |format|
       if @transaction.save
         format.html { redirect_to @transaction, notice: "Transaction was successfully created." }
