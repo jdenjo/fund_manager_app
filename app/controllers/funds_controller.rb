@@ -10,6 +10,10 @@ class FundsController < ApplicationController
   # GET /funds/1
   # GET /funds/1.json
   def show
+    @fund = Fund.find(params[:id])
+    @positions = @fund.positions
+    tickers = @fund.positions.pluck(:ticker).join(", ")
+    @stocks = StockQuote::Stock.raw_quote(tickers)
   end
 
   # GET /funds/new

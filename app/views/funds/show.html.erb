@@ -1,19 +1,4 @@
-<% 
-@stocks = StockQuote::Stock.raw_quote(
-  "APL,
-    GOOG,
-    AMZN,
-    MSFT,
-    NFLX,
-    TSLA,
-    GOOGL,
-    GE,
-    NKE,
-    AMD,
-    BABA,
-    ROKU"
-)
-%>
+
 <div class="card">
   <div class="card-header">
     
@@ -77,10 +62,10 @@
       <% marketValue = stock["latestPrice"] * @totals["#{position.id}"]["total"]%>
       <% totalMarket += marketValue%>
       <tr class="position-row">
-        <td> + </td>
+        <td class="plus-dropdown"> + </td>
         <td><a href="https://ca.finance.yahoo.com/quote/<%=position.ticker%>"> <%= position.ticker %></a></td>
         <td><%= name %>
-          <td><%= position.created_at.strftime("%d/%m/%Y")  %></td>
+          <td><%= position.created_at.strftime("%m/%d/%Y")  %></td>
           <td><%= number_to_currency(@totals["#{position.id}"]["average"]) %></td>
           <td><%= number_to_currency(stock["latestPrice"]) %></td>
           <td><%= number_with_delimiter(@totals["#{position.id}"]["total"], :delimiter => ',') %> </td>
@@ -95,11 +80,11 @@
         <% position.transactions.each do |transaction| %>
           <% tBook = transaction.price * transaction.shares %>
           <% tMarket = stock["latestPrice"] * transaction.shares%>
-          <tr>
+          <tr id=<%=transaction.ticker %>>
             <td />
             <td />
             <td />
-            <td><%= transaction.created_at.strftime("%d/%m/%Y")  %></td>
+            <td><%= transaction.created_at.strftime("%m/%d/%Y")   %></td>
             <td><%= number_to_currency(transaction.price) %></td>
             <td />
             <td><%= number_with_delimiter(transaction.shares, :delimiter => ',') %></td>

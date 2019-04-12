@@ -7,6 +7,7 @@ class CreateTransactions < ActiveRecord::Migration[5.2]
       t.string :status
       t.text :reason
       t.references :position, foreign_key: true
+      t.references :fund, foreign_key: true
       t.timestamps
     end
   end

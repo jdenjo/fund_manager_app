@@ -102,12 +102,12 @@ users = User.all
         position: Position.last,
         reason: "Catalyst upcoming",
         status: status.sample,
+        created_at: Faker::Date.backward(90),
+        fund: Fund.last,
       )
     end
   end
 end
-
-# stocks = StockQuote::Stock.raw_quote("aapl,tsla")
 
 for i in 0..(tickers.length - 1)
   if !(stocks[tickers[i]] == nil)

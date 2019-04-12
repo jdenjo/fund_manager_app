@@ -1,7 +1,10 @@
+<% @funds = Fund.all %>
+
 <%= simple_form_for transaction do |f| %>
+  <%= f.input :ticker, required:true %>
   <%= f.input :shares, required: true %>
   <%= f.input :price, required: true %>
   <%= f.input :reason, required: true %>
-  <%= f.hidden_field :ticker, value: "AAPL" %>
+  <%= f.input :fund, collection: @funds %>
   <%= f.button :submit, class: 'btn btn-primary' %>
 <% end %>

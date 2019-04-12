@@ -24,28 +24,30 @@ class TransactionsController < ApplicationController
   # POST /transactions
   # POST /transactions.json
   def create
-    @transaction = Transaction.new(transaction_params)
+    fund = Fund.find(transaction_params["fund"])
 
-    byebug
+    @transaction = Transaction.new(
+      shares: transaction_params["shares"],
+      price: transaction_params["price"],
+      reason: transaction_params["reason"],
+      ticker: transaction_params["ticker"],
+      fund: fund,
+      status: "executing",
+    )
 
-    if Position.where(ticker: @transaction.ticker).exists?
-      @transaction.position = Position.where(ticker: @transaction.ticker)
+    if Position.where(ticker: @transaction.ticker, fund: @transaction.fund).exists?
+      @transaction.position = Position.where(ticker: @transaction.ticker, fund: @transaction.fund)
     else
-      Position.new()
-    end
+      byebug
 
-    # <ActionController::Parameters {"shares"=>"100", "price"=>"198.5", "reason"=>"Test"} permitted: true>
-    # create_table "positions", force: :cascade do |t|
-    #   t.string "ticker"
-    #   t.string "sector"
-    #   t.datetime "termination"
-    #   t.bigint "user_id"
-    #   t.bigint "fund_id"
-    #   t.datetime "created_at", null: false
-    #   t.datetime "updated_at", null: false
-    #   t.index ["fund_id"], name: "index_positions_on_fund_id"
-    #   t.index ["user_id"], name: "index_positions_on_user_id"
-    # end
+      Position.create(
+        ticker: @transaction.ticker,
+        sector: "Test",
+        user_id: User.last.id,
+        fund: @transaction.fund,
+      )
+      @transaction.position = Position.last
+    end
 
     respond_to do |format|
       if @transaction.save
@@ -91,6 +93,6 @@ class TransactionsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def transaction_params
-    params.require(:transaction).permit(:shares, :price, :status, :reason, :position_id)
+    params.require(:transaction).permit(:fund, :shares, :price, :status, :reason, :position_id, :ticker)
   end
 end

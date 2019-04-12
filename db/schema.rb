@@ -76,8 +76,10 @@ ActiveRecord::Schema.define(version: 2019_04_11_020800) do
     t.string "status"
     t.text "reason"
     t.bigint "position_id"
+    t.bigint "fund_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["fund_id"], name: "index_transactions_on_fund_id"
     t.index ["position_id"], name: "index_transactions_on_position_id"
   end
 
@@ -95,5 +97,6 @@ ActiveRecord::Schema.define(version: 2019_04_11_020800) do
 
   add_foreign_key "positions", "funds"
   add_foreign_key "stocks", "positions"
+  add_foreign_key "transactions", "funds"
   add_foreign_key "transactions", "positions"
 end
