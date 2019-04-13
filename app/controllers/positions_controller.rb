@@ -1,10 +1,11 @@
 class PositionsController < ApplicationController
   before_action :set_position, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /positions
   # GET /positions.json
   def index
-    @positions = Position.all
+    @positions = Position.where(user_id: current_user.id)
   end
 
   # GET /positions/1

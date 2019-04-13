@@ -1,33 +1,32 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Positions</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Ticker</th>
-      <th>Created at</th>
-      <th>User</th>
-      <th>Fund</th>
-      <th colspan="4"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @positions.each do |position| %>
-      <tr>
-        <td><%= position.ticker %></td>
-        <td><%= position.created_at %></td>
-        <td><%= position.user.email %></td>
-        <td><%= position.fund.name %></td>
-        <td><%= link_to 'Show', position %></td>
-        <td><%= link_to 'Edit', edit_position_path(position) %></td>
-        <td><%= link_to 'Close Position', position, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Position', new_position_path %>
+<div class="card">
+  <div class="card-header">
+    Positions</div>
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Ticker</th>
+          <th>Created at</th>
+          <th>User</th>
+          <th>Fund</th>
+          <th>Status</th>
+          <th colspan="4"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @positions.each do |position| %>
+          <tr>
+            <td><%= position.ticker %></td>
+            <td><%= position.created_at %></td>
+            <td><%= position.user.email %></td>
+            <td><%= position.fund.name %></td>
+            <td><%= position.status %></td>
+            <td><%= link_to 'Show', position %></td>
+            <td><%= link_to 'Edit', edit_position_path(position) %></td>
+            <td><%= link_to 'Close Position', position, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

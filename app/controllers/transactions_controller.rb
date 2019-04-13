@@ -1,10 +1,16 @@
 class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+
+  def addTrim
+    id = params[:id]
+    @position = Position.find(id)
+  end
 
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = Transaction.all
+    @transactions = Transaction.where(user_id: current_user.id)
   end
 
   # GET /transactions/1
@@ -25,33 +31,47 @@ class TransactionsController < ApplicationController
   # POST /transactions.json
   def create
     fund = Fund.find(transaction_params["fund"])
+    cost = transaction_params["price"].to_f * transaction_params["shares"].to_f
 
     @transaction = Transaction.new(
       shares: transaction_params["shares"],
       price: transaction_params["price"],
       reason: transaction_params["reason"],
       ticker: transaction_params["ticker"],
+      cost: cost,
       fund: fund,
-      status: "executing",
+      user: current_user,
     )
 
     if Position.where(ticker: @transaction.ticker, fund: @transaction.fund).exists?
-      @transaction.position = Position.where(ticker: @transaction.ticker, fund: @transaction.fund)
+      @transaction.position = Position.where(ticker: @transaction.ticker, fund: @transaction.fund)[0]
     else
-      byebug
-
       Position.create(
         ticker: @transaction.ticker,
         sector: "Test",
         user_id: User.last.id,
         fund: @transaction.fund,
+        status: "active",
       )
       @transaction.position = Position.last
     end
 
     respond_to do |format|
       if @transaction.save
-        format.html { redirect_to @transaction, notice: "Transaction was successfully created." }
+
+        # update the shares and price of the position
+        position = @transaction.position
+        position.totalShares = (position.totalShares.to_f + @transaction.shares)
+        position.averageCost = (position.averageCost.to_f + @transaction.cost)
+        position.averagePrice = (position.averageCost.to_f / position.totalShares.to_f)
+        position.save
+
+        #check if the position has no shares left
+        if position.totalShares <= 0
+          position.status = "inactive"
+        end
+
+        format.html { redirect_to "/funds/#{fund.id}", notice: "Transaction was successfully executed." }
         format.json { render :show, status: :created, location: @transaction }
       else
         format.html { render :new }

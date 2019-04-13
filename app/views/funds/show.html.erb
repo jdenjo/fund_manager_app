@@ -11,15 +11,15 @@
     </p>
     <p>
       <strong>Aum:</strong>
-      $<%= number_with_delimiter(@fund.AUM, :delimiter => ',') %>
+      <%= number_to_currency(@fund.AUM) %>
     </p>
     <p>
       <strong>Inception:</strong>
-      <%= @fund.inception %>
+      <%= dateFormat(@fund.inception) %>
     </p>
     <p>
       <strong>Portfolio Manager:</strong>
-      <%= @fund.pm.first_name + " " + @fund.pm.last_name %>
+      <a href="/users/<%=@fund.pm.id %>"> <%= @fund.pm.first_name + " " + @fund.pm.last_name %> </a>
     </p>
   </div>
 </div>
@@ -29,13 +29,14 @@
 <div class="card">
 <div class="card-header">Active Positions</div>
 <div class="card-body">
-<p>(thousands)</p>
+<p class="unit">(Thousands)</p>
 <table class="table">
   <thead class="thead-dark">
     <tr class="table-header">
       <th  />
       <th >Ticker</th>
       <th>Company</th>
+      <th>Sector</th>
       <th>Entry</th>
       <th>Avg</th>
       <th>Spot</th>
@@ -45,42 +46,51 @@
       <th>gain/loss</th>
       <th>gain/loss(%) </th>
       <th>Analyst</th>
-      <th colspan="4"></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
   <tbody>
     <% totalBook = 0%>
     <% totalMarket = 0%>
-    <% @fund.positions.each do |position| %>
+    <% @positions.each do |position| %>
       <% stock = @stocks[position.ticker]["quote"]%>
-      <% name = stock["companyName"] %>
-      <% name.slice! "Company" %>
-      <% name.slice! "Inc." %>
-      <% name.slice! "Corporation" %>
-      <% bookValue = @totals["#{position.id}"]["average"] *  @totals["#{position.id}"]["total"] %>
+      <% bookValue = position.averageCost %>
       <% totalBook += bookValue%>
-      <% marketValue = stock["latestPrice"] * @totals["#{position.id}"]["total"]%>
+      <% marketValue = stock["latestPrice"] * position.totalShares%>
       <% totalMarket += marketValue%>
+
       <tr class="position-row">
-        <td class="plus-dropdown"> + </td>
+        <td class="plus-dropdown" id="<%= position.ticker %>">+</td>
         <td><a href="https://ca.finance.yahoo.com/quote/<%=position.ticker%>"> <%= position.ticker %></a></td>
-        <td><%= name %>
+        <td><%= stock["companyName"].truncate(15) %></td>
+        <td><%= position.sector%></td>
           <td><%= position.created_at.strftime("%m/%d/%Y")  %></td>
-          <td><%= number_to_currency(@totals["#{position.id}"]["average"]) %></td>
+          <td><%= number_to_currency(position.averagePrice) %></td>
           <td><%= number_to_currency(stock["latestPrice"]) %></td>
-          <td><%= number_with_delimiter(@totals["#{position.id}"]["total"], :delimiter => ',') %> </td>
+          <td><%= number_with_delimiter(position.totalShares, :delimiter => ',') %> </td>
           <td><%= number_to_currency(bookValue/1000)  %></td>
           <td><%= number_to_currency( marketValue/1000)  %> </td>
-          <td><%= number_to_currency((bookValue - marketValue)/1000) %></td>
-          <td><%= (((bookValue / marketValue)-1) * 100).round(1) %> %</td>
-          <td><%= position.user.last_name %></td>
-          <td><%= link_to 'Details', position %></td>
-          <td><%= link_to 'Sell/Cover', position, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+
+        <%
+        pnL = marketValue - bookValue
+        pnLPercent = marketValue / bookValue
+        if (pnL) > 0 
+            pnlClass = "positive" 
+          else
+            pnlClass = "negative" 
+          end
+        %>
+        
+          <td class="<%= pnlClass %>">$<%= sprintf("%+.1f",((marketValue - bookValue)/1000)) %></td>
+          <td class="<%= pnlClass %>"><%= sprintf("%+.1f", (((marketValue / bookValue)-1) * 100).round(1)) %>%</td>
+          <td><a href="/users/<%= position.user.id %>"><%= position.user.last_name %></a></td>
+
+          <td><%= link_to 'Buy | Short | Sell | Cover', addtrim_path(:id => position.id) %></td>
         </tr>
         <% position.transactions.each do |transaction| %>
           <% tBook = transaction.price * transaction.shares %>
           <% tMarket = stock["latestPrice"] * transaction.shares%>
-          <tr id=<%=transaction.ticker %>>
+          <tr class=<%=transaction.ticker %> id="transaction-table">
             <td />
             <td />
             <td />
@@ -91,24 +101,26 @@
             <td><%= number_to_currency(tBook/1000) %> </td>
             <td><%= number_to_currency(tMarket/1000) %></td>
             <td><%= number_to_currency( (tBook - tMarket)/1000) %> </td>
-            <td><%= (((tBook / tMarket)-1) * 100).round(1) %> %</td>
+            <td><%= ((((tBook / tMarket)-1) * 100).round(1)) %> %</td>
+            <td><a href="/users/<%= position.user.id %>"><%= transaction.user.last_name %></a></td>
           </tr>
         <% end %>
       <% end %>
-      <tr class="table-header">
-        <th></th>
-        <th>Total</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th><%= number_to_currency(totalBook) %></th>
-        <th><%= number_to_currency(totalMarket) %></th>
-        <th><%= number_to_currency(totalBook - totalMarket) %></th>
-        <th><%= (((totalBook / totalMarket)-1) * 100).round(1) %> %</th>
-        <th></th>
-        <th colspan="4"></th>
+      <tr >
+        <td></td>
+        <td>Total</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><%= number_to_currency(totalBook/1000) %></td>
+        <td><%= number_to_currency(totalMarket/1000) %></td>
+        <td><%= number_to_currency((totalBook - totalMarket)/1000) %></td>
+        <td><%= (((totalMarket / totalBook )-1) * 100).round(1) %> %</td>
+        <td></td>
+        <td colspan="4"></td>
       </tr>
     </tbody>
   </table>

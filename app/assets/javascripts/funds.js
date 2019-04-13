@@ -6,11 +6,17 @@
 
 $(document).ready(() => {
 
-        $('.plus-dropdown').click((event) => {
-            console.log("clicked here");
-            
-        });
-    
+    $('.plus-dropdown').click((event) => {
+
+        if (event.currentTarget.innerHTML == "+") {
+            $(`.${event.currentTarget.id}`).show();
+            event.currentTarget.innerHTML = "-"
+        } else {
+            $(`.${event.currentTarget.id}`).hide();
+            event.currentTarget.innerHTML = "+"
+        }
+
+    });
+
 
 });
-

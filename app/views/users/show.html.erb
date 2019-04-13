@@ -1,34 +1,50 @@
-<p id="notice"><%= notice %></p>
+<div class="card">
+  <div class="card-header"> User Details </div>
+  <div class="card-body">
+    <p>
+      <strong>First name:</strong>
+      <%= @user.first_name %>
+    </p>
+    <p>
+      <strong>Last name:</strong>
+      <%= @user.last_name %>
+    </p>
+    <p>
+      <strong>Email:</strong>
+      <%= @user.email %>
+    </p>
+    <p>
+      <strong>Role:</strong>
+      <%= @user.role %>
+    </p>
+    <%= link_to 'Edit', edit_user_path(@user) %>
+    <br /> <br />
 
-<p>
-  <strong>First name:</strong>
-  <%= @user.first_name %>
-</p>
-
-<p>
-  <strong>Last name:</strong>
-  <%= @user.last_name %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
-  <strong>Password digest:</strong>
-  <%= @user.password_digest %>
-</p>
-
-<p>
-  <strong>Admin:</strong>
-  <%= @user.admin %>
-</p>
-
-<p>
-  <strong>Role:</strong>
-  <%= @user.role %>
-</p>
-
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Ticker </th>
+              <th scope="col">Entry Date</th>
+              <th scope="col">Price</th>
+              <th scope="col">Shares</th>
+              <th scope="col">Book Value</th>
+              <th scope="col">Investment Reason</th>
+              <th scope="col">Analyst</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @user.transactions.each do |transaction| %>
+              <tr>
+                <td> <%= transaction.ticker %></th>
+                <td> <%= dateFormat(transaction.created_at) %></th>
+                <td><%= number_to_currency(transaction.price) %></td>
+                <td><%= commaNumber(transaction.shares) %></td>
+                <td><%= number_to_currency(transaction.cost) %></td>
+                <td><%= transaction.reason %></td>
+                <td> <a href="/users/<%=transaction.user.id %>"> <%= transaction.user.full_name %></a></td>
+              </tr>
+            <%end%>
+          </tbody>
+        </table>
+      </div>
+    </div>

@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_secure_password
   has_many :funds
+  has_many :transactions
   #this provides user authentication with bycrpt
   validates :email, presence: true,
                     uniqueness: true,

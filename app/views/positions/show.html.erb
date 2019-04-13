@@ -1,24 +1,47 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Ticker:</strong>
-  <%= @position.ticker %>
-</p>
-
-<p>
-  <strong>Termination:</strong>
-  <%= @position.termination %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @position.user %>
-</p>
-
-<p>
-  <strong>Fund:</strong>
-  <%= @position.fund %>
-</p>
-
-<%= link_to 'Edit', edit_position_path(@position) %> |
-<%= link_to 'Back', positions_path %>
+<div class="card">
+  <div class="card-header"> Position Details </div>
+  <div class="card-body">
+    <p>
+      <strong>Ticker:</strong>
+      <%= @position.ticker %>
+    </p>
+    <p>
+      <strong>User:</strong>
+      <a href="/users/<%= @position.user.id %>"> <%= @position.user.last_name %></a>
+    </p>
+    <p>
+      <strong>Fund:</strong>
+      <a href="/funds/<%= @position.fund.id%>%"><%= @position.fund.name %></a>
+    </p>
+    <p>
+      <strong>First trade:</strong>
+      <%= dateFormat(@position.created_at) %></a>
+  </p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Entry Date</th>
+        <th scope="col">Price</th>
+        <th scope="col">Shares</th>
+        <th scope="col">Book Value</th>
+        <th scope="col">Investment Reason</th>
+        <th scope="col">Analyst</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @position.transactions.each do |transaction| %>
+        <tr>
+          <td> <%= dateFormat(transaction.created_at) %></th>
+          <td><%= number_to_currency(transaction.price) %></td>
+          <td><%= commaNumber(transaction.shares) %></td>
+          <td><%= number_to_currency(transaction.cost) %></td>
+                    <td><%= transaction.reason %></td>
+          <td> <a href="/users/<%=transaction.user.id %>"> <%= transaction.user.full_name %></a></td>
+          <td> <%= transaction.status %>
+        </tr>
+      <%end%>
+    </tbody>
+    <table>
+    </div>
+  </div>

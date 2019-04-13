@@ -1,13 +1,20 @@
-<p id="notice"><%= notice %></p>
+<div class="card">
+<div class="card-header"> Transaction Details </div>
+<div class="card-body">
+<p><strong>ID:</strong> <%= @transaction.id %></p>
+
+
+<p><strong>Analyst: </strong> <a href="/users/<%=@transaction.user.id %>"> <%= @transaction.user.first_name + " " + @transaction.user.last_name %> </a> </p>
+<p><strong>Fund: </strong> <a href="/funds/<%=@transaction.fund.id %>"><%= @transaction.fund.name %></a> </p>
 
 <p>
   <strong>Shares:</strong>
-  <%= @transaction.shares %>
+  <%= number_with_delimiter(@transaction.shares, :delimiter => ',') %>
 </p>
 
 <p>
   <strong>Price:</strong>
-  <%= @transaction.price %>
+  <%= number_to_currency @transaction.price %>
 </p>
 
 <p>
@@ -22,8 +29,8 @@
 
 <p>
   <strong>Position:</strong>
-  <%= @transaction.position %>
+  <a href="/positions/<%=@transaction.position.id %>"><%= @transaction.position.fund.name + " : " + @transaction.position.ticker %></a> 
 </p>
 
-<%= link_to 'Edit', edit_transaction_path(@transaction) %> |
-<%= link_to 'Back', transactions_path %>
+</div>
+</div>

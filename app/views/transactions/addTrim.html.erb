@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="card-body">
+    <% @funds = Fund.all %>
+    <% transaction = Transaction.new %>
+    <%= simple_form_for transaction do |f| %>
+      <%= f.input :ticker, required: true, input_html: { value: @position.ticker } %>
+
+      <%= f.input :shares, required: true, input_html: { value: (-1 * @position.totalShares) }  %>
+      <p>  Currently Own: <%= @position.totalShares %> </p>
+      <%= f.input :price, required: true %>
+    <p>  Average Price: <%= @position.averagePrice %> </p>
+      <%= f.input :reason, required: true %>
+      <%= f.input :fund, collection: @funds, selected: @position.fund.id  %>
+      <%= f.button :submit, class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+</div>

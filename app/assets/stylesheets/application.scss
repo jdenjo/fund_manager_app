@@ -27,8 +27,8 @@
 
  .page-contents{
 
-     margin-left: 5%;
-     margin-right: 5%;
+     margin-left: 1.5%;
+     margin-right: 1.5%;
 
  }
 
@@ -39,3 +39,26 @@
  .card{
   margin-top: 20px;   
  }
+
+ #transaction-table{
+     display: none;
+ }
+
+ .negative{
+     color: red
+ }
+
+ .positive{
+    color: green
+}
+
+.card-header{
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.unit{
+    text-align: right;
+    margin: 2px;
+    font-weight: bold;
+}

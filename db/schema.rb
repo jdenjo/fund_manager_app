@@ -28,7 +28,10 @@ ActiveRecord::Schema.define(version: 2019_04_11_020800) do
   create_table "positions", force: :cascade do |t|
     t.string "ticker"
     t.string "sector"
-    t.datetime "termination"
+    t.integer "totalShares"
+    t.float "averagePrice"
+    t.float "averageCost"
+    t.string "status"
     t.bigint "user_id"
     t.bigint "fund_id"
     t.datetime "created_at", null: false
@@ -73,14 +76,17 @@ ActiveRecord::Schema.define(version: 2019_04_11_020800) do
     t.integer "shares"
     t.string "ticker"
     t.float "price"
+    t.float "cost"
     t.string "status"
     t.text "reason"
+    t.bigint "user_id"
     t.bigint "position_id"
     t.bigint "fund_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["fund_id"], name: "index_transactions_on_fund_id"
     t.index ["position_id"], name: "index_transactions_on_position_id"
+    t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -99,4 +105,5 @@ ActiveRecord::Schema.define(version: 2019_04_11_020800) do
   add_foreign_key "stocks", "positions"
   add_foreign_key "transactions", "funds"
   add_foreign_key "transactions", "positions"
+  add_foreign_key "transactions", "users"
 end
