@@ -85,7 +85,7 @@ users = User.all
     @tickers.shuffle!
     tickerData = @tickers.last
     @tickers.pop
-    userData = users.sample
+    userData = super_user
 
     Position.create(
       ticker: tickerData,
@@ -95,10 +95,11 @@ users = User.all
       sector: stocks[tickerData]["quote"]["sector"],
     )
 
-    5.times do
+    15.times do
       shares = rand(1000..100000)
       price = stocks[tickerData]["quote"]["latestPrice"] * rand(0.8..1.3)
       cost = price.to_f * shares.to_f
+
       Transaction.create(
         ticker: tickerData,
         price: price,
