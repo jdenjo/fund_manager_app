@@ -24,6 +24,7 @@
           <thead>
             <tr>
               <th>Ticker </th>
+              <th>Order </th>
               <th scope="col">Entry Date</th>
               <th scope="col">Price</th>
               <th scope="col">Shares</th>
@@ -36,6 +37,7 @@
             <% @user.transactions.each do |transaction| %>
               <tr>
                 <td> <%= transaction.ticker %></th>
+                <td> <%= transaction.tradeType %></th>
                 <td> <%= dateFormat(transaction.created_at) %></th>
                 <td><%= number_to_currency(transaction.price) %></td>
                 <td><%= commaNumber(transaction.shares) %></td>

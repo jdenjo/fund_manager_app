@@ -1,30 +1,24 @@
 <div class="card">
-  <div class="card-header">Ticker Search</div>
+  <div class="card-header">New Trade</div>
   <div class="card-body">
     <form action="/" id="new-trade">
-      Ticker:
-      <input type="text" name="ticker" id="ticker" >
-      <input type="submit" value="Search"> <br /> <br />
       <p><span id="search-message"></span></p>
+      Ticker<br />
+
+      <input type="text" name="ticker" id="ticker" class="form-control" value="<%=@searchTicker %>">
+      <br />
+      <input type="submit" value="Search" class="btn btn-dark"> <br />
+      <br />
     </form>
   </div>
-</div>
-<div class="card">
-  <div class="card-header">Stock Data</div>
-  <div class="card-body">
-    <strong>Ticker:</strong> <span id="symbol"></span> <br />
-    <strong>Company Name:</strong> <span id="name"> </span> <br />
-    <strong>Exchange:</strong> <span id="exchange"></span><br />
-    <strong>Latest Price:</strong> <span id="price"></span><br />
-    <strong>Market Cap (mln):</strong> <span id="mcap"></span><br />
-    <strong>Daily Volume (shares):</strong> <span id="vol"></span><br />
-    <strong>Daily Volume ($):</strong> <span id="volAmount"></span><br />
   </div>
-</div>
-<div class="card">
-  <div class="card-header">Trade Information</div>
-  <div class="card-body">
-    <%= render 'form', transaction: @transaction %>
+  <div class="stock-details"  >
+    <div class="card">
+      <div class="card-header">Trade Details</div>
+      <div class="card-body">
+        <%= render 'form', transaction: @transaction %>
+      </div>
+    </div>
   </div>
 </div>
 </div>

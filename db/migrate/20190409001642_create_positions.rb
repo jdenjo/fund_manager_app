@@ -3,6 +3,7 @@ class CreatePositions < ActiveRecord::Migration[5.2]
     create_table :positions do |t|
       t.string :ticker
       t.string :sector
+      t.string :positionType
       t.integer :totalShares
       t.float :averagePrice
       t.float :averageCost

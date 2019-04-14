@@ -25,7 +25,7 @@ super_user = User.create(
 
 roles = ["PM", "Analyst"]
 
-10.times do
+3.times do
   first_name = Faker::Name.first_name
   last_name = Faker::Name.last_name
   User.create(
@@ -51,14 +51,26 @@ stocks = StockQuote::Stock.raw_quote(
     NKE,
     AMD,
     BABA,
-    ROKU"
+    ROKU,
+    INTC,
+    PCG,
+    BAC,
+    XOM,
+    VZ,
+    GE,
+    QCOM,
+    PFE,
+    S,
+    NOK,
+    T"
 )
 
 users = User.all
 
-3.times do |i|
+5.times do |i|
   inception = Faker::Date.backward(365 * 5)
 
+  #reload new tickers for each fund
   @tickers = [
     "GOOG",
     "AMZN",
@@ -71,33 +83,51 @@ users = User.all
     "AMD",
     "BABA",
     "ROKU",
+    "INTC",
+    "PCG",
+    "BAC",
+    "XOM",
+    "VZ",
+    "GE",
+    "QCOM",
+    "PFE",
+    "S",
+    "NOK",
+    "T",
   ]
 
   Fund.create(
     name: Faker::Space.moon + " Fund",
     strategy: strategies[i],
     pm: users.sample,
-    AUM: rand(500000000..2000000000),
+    AUM: 1000000000,
     inception: inception,
   )
 
-  rand(5..10).times do
+  rand(20).times do
     @tickers.shuffle!
     tickerData = @tickers.last
     @tickers.pop
-    userData = super_user
+    userData = users.sample
+
+    if stocks[tickerData]["quote"]["sector"] != nil
+      sector = stocks[tickerData]["quote"]["sector"]
+    else
+      sector = "diversified"
+    end
 
     Position.create(
       ticker: tickerData,
       user: userData,
       fund: Fund.last,
       status: "active",
-      sector: stocks[tickerData]["quote"]["sector"],
+      sector: sector,
+      positionType: "LONG",
     )
 
-    15.times do
+    4.times do
       shares = rand(1000..100000)
-      price = stocks[tickerData]["quote"]["latestPrice"] * rand(0.8..1.3)
+      price = stocks[tickerData]["quote"]["latestPrice"] * rand(0.85..1.1)
       cost = price.to_f * shares.to_f
 
       Transaction.create(
@@ -111,6 +141,7 @@ users = User.all
         created_at: Faker::Date.backward(90),
         fund: Fund.last,
         user: userData,
+        tradeType: "BUY",
       )
 
       position = Position.last

@@ -1,10 +1,20 @@
 <% @funds = Fund.all %>
+<% @users = User.all %>
 
 <%= simple_form_for transaction do |f| %>
-  <%= f.input :ticker, required:true %>
-  <%= f.input :shares, required: true %>
-  <%= f.input :price, required: true %>
-  <%= f.input :reason, required: true %>
-  <%= f.input :fund, collection: @funds %>
-  <%= f.button :submit, class: 'btn btn-primary' %>
+  <%= f.input :ticker,  required:true, :readonly => true  %>
+  Company <br /> <input id="company" class="form-control" type="text" readonly> <p></p>
+  Exchange <br /> <input id="exchange" class="form-control" type="text" readonly> <p></p>
+  Market Cap <br /> <input id="mcap" class="form-control" type="text" readonly> <p></p>
+  Volume <br /> <input id="vol" class="form-control" type="text" readonly> <p></p>
+  <%= f.input :sector,  required:true, :readonly => true  %>
+  <%= f.input :tradeType, :label => "Buy/Short", collection: [['BUY','BUY'], ['SHORT','SHORT'] ],  required: true %>
+  <%= f.input :fund, :label => "Fund", collection: @funds, required: true %>
+  <%= f.input :user, :label => "Analyst", :label_method => :full_name, collection: @users, required: true %>
+  <%= f.input :shares, :label => "Number of Shares", required: true %>
+  <%= f.input :priceType, :label => "Order Method", collection: [['Limit','Limit'], ['Market','Market']], as: :radio_buttons, :checked => ['Market', 'Market'] %>
+  <%= f.input :price,  required: true %>
+  <%= f.input :reason, :label => "Investment Reason", required: true %>
+  <%= f.input :traderInstruction, :label => "Special Instructions to Trader (Optional)" %>
+  <%= f.button :submit, class: 'btn btn-dark' %>
 <% end %>

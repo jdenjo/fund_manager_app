@@ -14,12 +14,12 @@ class StocksController < ApplicationController
 
   # GET /stocks/new
   def new
-    stocks = StockQuote::Stock.raw_quote(params[:ticker])
+    ticker = params[:ticker].capitalize
+    stocks = StockQuote::Stock.raw_quote(ticker)
+
     if stocks.blank?
       render :json => { error: "ticker not found" }
     else
-      ticker = params[:ticker]
-
       @stock = Stock.new(
         symbol: stocks[ticker]["quote"]["symbol"],
         companyName: stocks[ticker]["quote"]["companyName"],

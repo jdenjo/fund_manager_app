@@ -3,6 +3,9 @@
 
 
 $(document).ready(() => {
+
+    $(".stock-details").hide();
+
     if (document.querySelector('#new-trade')) {
         document.querySelector('#new-trade').addEventListener('submit', (event) => {
             event.preventDefault();
@@ -13,24 +16,26 @@ $(document).ready(() => {
                 .then(res => res.json()).then(body => {
                     if (body.error) {
                         $("#search-message").html("Stock does not exist");
-                        $("#symbol").html("");
-                        $("#name").html("");
-                        $("#exchange").html("");
-                        $("#price").html("");
-                        $("#mcap").html("");
-                        $("#vol").html("");
+                        $(".stock-details").hide();
+                        $("#company").val("");
+                        $("#exchange").val("");
+                        $("#price").val("");
+                        $("#mcap").val("");
+                        $("#vol").val("");
+                        $("#transaction_price").val("");
+                        $("#transaction_sector").val("");
 
                     } else {
-                        console.log(body);
-                        $("#transaction_ticker").val($("#ticker").val());
+                        $(".stock-details").show();
                         $("#search-message").html("");
-                        $("#symbol").html(body.symbol);
-                        $("#name").html(body.companyName);
-                        $("#exchange").html(body.primaryExchange);
-                        $("#price").html(toCurrency(body.latestPrice));
-                        $("#mcap").html(toCurrency(body.marketCap));
-                        $("#vol").html(numberWithCommas(body.latestVolume));
-                        $("#volAmount").html(toCurrency(Math.round(body.latestVolume * body.latestPrice)));
+                        $("#transaction_ticker").val(body.symbol);
+                        $("#company").val(body.companyName);
+                        $("#exchange").val(body.primaryExchange);
+                        $("#price").val(toCurrency(body.latestPrice));
+                        $("#mcap").val(toCurrency(body.marketCap));
+                        $("#vol").val(numberWithCommas(body.latestVolume));
+                        $("#transaction_price").val(body.latestPrice);
+                        $("#transaction_sector").val(body.sector);
                     }
                 }).catch(error => {
                     console.log(error)

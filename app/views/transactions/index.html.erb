@@ -6,8 +6,10 @@
       <thead>
         <tr>
           <th>Ticker</th>
+          <th>Type</th>
           <th>Shares</th>
           <th>Price</th>
+          <th>Cost</th>
           <th>Fund</th>
           <th>Reason</th>
           <th>Date</th>
@@ -18,8 +20,10 @@
         <% @transactions.each do |transaction| %>
           <tr>
             <td><%= transaction.ticker %></td>
+            <td><%= transaction.tradeType %></td>
             <td><%= commaNumber(transaction.shares) %></td>
             <td><%= number_to_currency(transaction.price) %></td>
+            <td> <%= number_to_currency(transaction.cost) %></td>
             <td><%= transaction.fund.name %></td>
             <td><%= transaction.reason %></td>
             <td><%= transaction.created_at.strftime("%m/%d/%Y  %I:%M%p") %></td>
