@@ -16,8 +16,16 @@ class ApplicationController < ActionController::Base
   helper_method(:commaNumber)
 
   def dateFormat(date)
-    return date.strftime("%m/%d/%Y  %I:%M%p")
+    return date.strftime("%m/%d/%y  %I:%M%p")
   end
+
+  helper_method(:dateFormat)
+
+  def tableDateFormat(date)
+    return date.strftime("%m/%d/%y")
+  end
+
+  helper_method(:tableDateFormat)
 
   helper_method(:dateFormat)
 

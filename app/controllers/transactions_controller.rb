@@ -2,6 +2,14 @@ class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
+  def changePosition
+    id = params[:id]
+    @position = Position.find(id)
+    @type = params[:type]
+    @stock = StockQuote::Stock.quote(@position.ticker)
+    @users = User.all
+  end
+
   def addTrim
     id = params[:id]
     @position = Position.find(id)
@@ -37,13 +45,11 @@ class TransactionsController < ApplicationController
 
     shares = 0
 
-    if transaction_params["tradeType"] == "SHORT"
+    if transaction_params["tradeType"] == "SHORT" || transaction_params["tradeType"] == "SELL"
       shares = transaction_params["shares"].to_f * -1
     else
       shares = transaction_params["shares"]
     end
-
-    byebug
 
     @transaction = Transaction.new(
       shares: shares,
@@ -68,17 +74,19 @@ class TransactionsController < ApplicationController
       positionType = "SHORT"
     end
 
-    if Position.where(ticker: @transaction.ticker, fund: @transaction.fund).exists?
+    # if there is an active existing position add to it
+    if Position.where(ticker: @transaction.ticker, fund: @transaction.fund, status: "ACTIVE").exists?
       @transaction.position = Position.where(ticker: @transaction.ticker, fund: @transaction.fund)[0]
       #TODO Reject if its a long position when an existing short is made
       #regulation wise you cant long and short a position at the same time
+      # else make a new position
     else
       Position.create(
         ticker: @transaction.ticker,
         sector: @transaction.sector,
-        user_id: User.last.id,
+        user_id: @transaction.fund.pm,
         fund: @transaction.fund,
-        status: "active",
+        status: "ACTIVE",
         positionType: positionType,
       )
       @transaction.position = Position.last
@@ -91,14 +99,11 @@ class TransactionsController < ApplicationController
         position.totalShares = (@transaction.position.totalShares.to_f + @transaction.shares)
         position.averageCost = (@transaction.position.averageCost.to_f + @transaction.cost)
         position.averagePrice = (@transaction.position.averageCost.to_f.abs / @transaction.position.totalShares.to_f.abs)
+        #close out position if no shares left
+        position.totalShares == 0 ? position.status = "INACTIVE" : position.status = "ACTIVE"
         position.save
 
-        #check if the position has no shares left
-        if @transaction.position.totalShares <= 0
-          @transaction.position.status = "inactive"
-        end
-
-        format.html { redirect_to "/funds/#{fund.id}", notice: "#{@transaction.tradeType} order for #{@transaction.shares} of  #{@transaction.ticker} was successfully entered into the system." }
+        format.html { redirect_to "/funds/#{fund.id}", notice: "#{@transaction.tradeType} order for #{commaNumber(@transaction.shares.abs)} of  #{@transaction.ticker} was successfully entered into the system." }
         format.json { render :show, status: :created, location: @transaction }
       else
         format.html { render :new }

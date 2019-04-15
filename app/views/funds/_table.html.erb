@@ -1,0 +1,105 @@
+  <table class="table">
+      <thead class="thead-dark">
+        <tr class="table-header">
+          <th  />
+          <th >Ticker</th>
+          <th>Position</th>
+          <th>Company</th>
+          <th>Sector</th>
+          <th>Entry</th>
+          <th>Avg</th>
+          <th>Spot</th>
+          <th>Shares</th>
+          <th>Book</th>
+          <th>Market </th>
+          <th>PnL</th>
+          <th>PnL(%) </th>
+          <th>Analyst</th>
+          <th colspan="2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% totalBook = 0%>
+        <% totalMarket = 0%>
+        <% @positions.each do |position| %>
+          <% stock = @stocks[position.ticker]["quote"]%>
+          <% bookValue = position.averageCost %>
+          <% totalBook += bookValue%>
+          <% marketValue = stock["latestPrice"] * position.totalShares.abs %>
+          <% totalMarket += marketValue%>
+          <tr class="position-row">
+            <td class="plus-dropdown" id="<%= position.ticker %>">+</td>
+            <td><a href="/positions/<%=position.id%>"> <%= position.ticker %></a></td>
+            <td><%= position.positionType%></td>
+            <td><%= stock["companyName"].truncate(13) %></td>
+            <td><%= position.sector ? position.sector.truncate(13) : "Diversified" %></td>
+            <td><%= tableDateFormat(position.created_at) %></td>
+            <td><%= number_to_currency(position.averagePrice) %></td>
+            <td><%= number_to_currency(stock["latestPrice"]) %></td>
+            <td><%= number_with_delimiter(position.totalShares, :delimiter => ',') %> </td>
+            <td><%= number_to_currency(bookValue/1000)  %></td>
+            <td><%= number_to_currency( marketValue/1000)  %> </td>
+            <%
+        pnL = position.positionType == "LONG" ? (marketValue - bookValue )/1000 :  (bookValue - marketValue)/1000
+        pnLPercent = position.positionType == "LONG" ? (marketValue / bookValue -1) * 100 :  ( bookValue / marketValue -1) * 100 
+        
+        if (pnL) > 0 
+            pnlClass = "positive" 
+        else
+            pnlClass = "negative" 
+        end 
+        %>
+            <td class="<%= pnlClass %>"><%= number_to_currency(pnL) %></td>
+            <td class="<%= pnlClass %>"><%= sprintf("%+.1f", ((pnLPercent).round(1))) %> %</td>
+            <td></td>
+            <% if position.positionType == "LONG"
+            option1 = "BUY"
+            option2 = "SELL"
+            else
+            option1 = "SHORT"
+            option2 = "COVER"
+            end
+          %>
+            <td><%= link_to "#{option1}", change_position_path(:id => position.id, :position => position, :type => option1 ) %></td>
+            <td><%= link_to "#{option2}", change_position_path(:id => position.id, :position => position, :type => option2 ) %></td>
+          </tr>
+          <% position.transactions.each do |transaction| %>
+            <% tBook = transaction.price * transaction.shares.abs %>
+            <% tMarket = stock["latestPrice"] * transaction.shares.abs%>
+            <tr class=<%=transaction.ticker %> id="transaction-table">
+              <td />
+              <td />
+              <td />
+              <td />
+              <td><%= transaction.created_at.strftime("%m/%d/%Y")   %></td>
+              <td><%= transaction.tradeType %></td>
+              <td><%= number_to_currency(transaction.price) %></td>
+              <td />
+              <td><%= number_with_delimiter(transaction.shares, :delimiter => ',') %></td>
+              <td><%= number_to_currency(tBook/1000) %> </td>
+              <td><%= number_to_currency(tMarket/1000) %></td>
+              <td><%= number_to_currency( transaction.tradeType == "BUY" ? (tMarket - tBook)/1000 :  (tBook - tMarket)/1000 ) %> </td>
+              <td><%= ((((tBook / tMarket)-1) * 100).round(1)) %> %</td>
+              <td><a href="/users/<%= position.user.id %>"><%= transaction.user.last_name %></a></td>
+            </tr>
+          <% end %>
+        <% end %>
+        <tr >
+          <td></td>
+          <td>Total</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><%= number_to_currency(totalBook/1000) %></td>
+          <td><%= number_to_currency(totalMarket/1000) %></td>
+          <td><%= number_to_currency((totalMarket - totalBook)/1000) %></td>
+          <td><%= (((totalMarket / totalBook )-1) * 100).round(1) %> %</td>
+          <td></td>
+          <td colspan="4"></td>
+        </tr>
+      </tbody>
+    </table>

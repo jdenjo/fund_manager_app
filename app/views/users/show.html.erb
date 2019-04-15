@@ -25,20 +25,21 @@
             <tr>
               <th>Ticker </th>
               <th>Order </th>
-              <th scope="col">Entry Date</th>
-              <th scope="col">Price</th>
-              <th scope="col">Shares</th>
-              <th scope="col">Book Value</th>
-              <th scope="col">Investment Reason</th>
-              <th scope="col">Analyst</th>
+              <th>Entry Date</th>
+              <th>Price</th>
+              <th>Shares</th>
+              <th>Book Value</th>
+              <th>Investment Reason</th>
+              <th>Analyst</th>
             </tr>
           </thead>
           <tbody>
             <% @user.transactions.each do |transaction| %>
               <tr>
-                <td> <%= transaction.ticker %></th>
-                <td> <%= transaction.tradeType %></th>
-                <td> <%= dateFormat(transaction.created_at) %></th>
+              
+                <td> <a href="/positions/<%= transaction.position.id %>"><%= transaction.ticker %> </a>  </td>
+                <td> <%= transaction.tradeType %></td>
+                <td> <%= dateFormat(transaction.created_at) %></td>
                 <td><%= number_to_currency(transaction.price) %></td>
                 <td><%= commaNumber(transaction.shares) %></td>
                 <td><%= number_to_currency(transaction.cost) %></td>

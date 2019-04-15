@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   get "/", to: "welcome#home", as: "home"
 
-  get "/transactions/addtrim", to: "transactions#addTrim", as: "addtrim"
+  get "/transactions/change", to: "transactions#changePosition", as: "change_position"
 
   resource :sessions, only: [:new, :create] do
     delete :destroy, on: :collection

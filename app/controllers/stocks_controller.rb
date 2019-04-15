@@ -14,7 +14,7 @@ class StocksController < ApplicationController
 
   # GET /stocks/new
   def new
-    ticker = params[:ticker].capitalize
+    ticker = params[:ticker].upcase
     stocks = StockQuote::Stock.raw_quote(ticker)
 
     if stocks.blank?

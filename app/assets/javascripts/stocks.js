@@ -44,6 +44,18 @@ $(document).ready(() => {
         });
     }
 
+    if (document.querySelector('#transaction_priceType_limit')) {
+        document.querySelector('#transaction_priceType_limit').addEventListener('click', (event) => {
+            $("#transaction_price").removeAttr('readonly');
+        })
+    }
+
+    if (document.querySelector('#transaction_priceType_market')) {
+        document.querySelector('#transaction_priceType_market').addEventListener('click', (event) => {
+            $("#transaction_price").attr('readonly','readonly');
+        })
+    }
+
 });
 
 function numberWithCommas(x) {

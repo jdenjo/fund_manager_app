@@ -55,7 +55,7 @@
             <td class="<%= pnlClass %>">$<%= sprintf("%+.1f",((marketValue - bookValue)/1000)) %></td>
             <td class="<%= pnlClass %>"><%= sprintf("%+.1f", (((marketValue / bookValue)-1) * 100).round(1)) %>%</td>
             <td><a href="/users/<%= position.user.id %>"><%= position.user.last_name %></a></td>
-            <td><%= link_to 'Buy | Short | Sell | Cover', addtrim_path(:id => position.id) %></td>
+            <td><%= link_to 'Buy | Short | Sell | Cover', change_position_path(:id => position.id) %></td>
           </tr>
           <% position.transactions.each do |transaction| %>
             <% tBook = transaction.price * transaction.shares %>
@@ -167,7 +167,7 @@
                <td class="<%= pnlClass %>">$<%= sprintf("%+.1f",((marketValue - bookValue)/1000)) %></td>
                <td class="<%= pnlClass %>"><%= sprintf("%+.1f", (((marketValue / bookValue)-1) * 100).round(1)) %>%</td>
                <td><a href="/users/<%= position.user.id %>"><%= position.user.last_name %></a></td>
-               <td><%= link_to 'Buy | Short | Sell | Cover', addtrim_path(:id => position.id) %></td>
+               <td><%= link_to 'Buy | Short | Sell | Cover', change_position_path(:id => position.id) %></td>
              </tr>
              <% position.transactions.each do |transaction| %>
                <% tBook = transaction.price * transaction.shares %>

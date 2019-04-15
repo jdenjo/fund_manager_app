@@ -1,0 +1,27 @@
+<div class="card">
+  <div class="card-header"> Change Position </div>
+  <div class="card-body">
+    <% @funds = Fund.all %>
+    <% transaction = Transaction.new %>
+    <%= simple_form_for transaction do |f| %>
+      <%= f.input :ticker, required: true, input_html: { value: @position.ticker,  :readonly => true  } %>
+      <%= f.input :tradeType, :label => "Order Type", required: true, input_html: { value: @type,  :readonly => true  } %>
+      <%= f.input :fund, input_html: { value: @position.fund.id,  :readonly => true  }, :as => :hidden, required: true %>
+      <%= f.input :user,  input_html: { value: @position.user.id,  :readonly => true  }, :as => :hidden, required: true %>
+      <div class="form-group">
+      <%= f.input :shares, :label => "Number of Shares", required: true %>
+      <small id="emailHelp" class="form-text text-muted">This position currently holds <%= commaNumber(@position.totalShares) %> shares</small>
+      </div>
+      
+      <div class="form-group">
+      <%= f.input :priceType, :label => "Execution Method", collection: [['Limit','Limit'], ['Market','Market']], as: :radio_buttons, :checked => ['Market', 'Market'] %>
+      <%= f.input :price,  required: true, :readonly => true , input_html: { value: @stock.latest_price } %>
+      <small id="emailHelp" class="form-text text-muted">This position currently averages <%= number_to_currency(@position.averagePrice) %> per share </small>
+      </div>
+
+      <%= f.input :reason, :label => "Investment Reason", required: true %>
+      <%= f.input :traderInstruction, :label => "Special Instructions to Trader (Optional)" %>
+      <%= f.button :submit, class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+</div>

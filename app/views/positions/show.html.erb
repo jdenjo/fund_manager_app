@@ -6,12 +6,20 @@
       <%= @position.ticker %>
     </p>
     <p>
-      <strong>User:</strong>
-      <a href="/users/<%= @position.user.id %>"> <%= @position.user.last_name %></a>
+      <strong>Position:</strong>
+      <%= @position.positionType %>
+    </p>
+    <p>
+      <strong>PM:</strong>
+      <a href="/users/<%= @position.user.id %>"> <%= @position.user.full_name %></a>
     </p>
     <p>
       <strong>Fund:</strong>
       <a href="/funds/<%= @position.fund.id%>%"><%= @position.fund.name %></a>
+    </p>
+     <p>
+      <strong>Status:</strong>
+      <%= @position.status %>
     </p>
     <p>
       <strong>First trade:</strong>
@@ -21,6 +29,7 @@
     <thead>
       <tr>
         <th scope="col">Entry Date</th>
+        <th scope="col">Fund</th>
         <th scope="col">Price</th>
         <th scope="col">Shares</th>
         <th scope="col">Book Value</th>
@@ -32,7 +41,8 @@
     <tbody>
       <% @position.transactions.each do |transaction| %>
         <tr>
-          <td> <%= dateFormat(transaction.created_at) %></th>
+          <td> <%= dateFormat(transaction.created_at) %></td>
+          <td> <%= transaction.fund.name %></td>
           <td><%= number_to_currency(transaction.price) %></td>
           <td><%= commaNumber(transaction.shares) %></td>
           <td><%= number_to_currency(transaction.cost) %></td>
