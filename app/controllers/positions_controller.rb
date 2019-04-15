@@ -5,14 +5,10 @@ class PositionsController < ApplicationController
   # GET /positions
   # GET /positions.json
   def index
-    @positions = Position.where(user_id: current_user.id)
-    @positions = @positions.where.not(totalShares: 0).order("fund_id ASC")
+    @positions = Position.where(user_id: current_user.id, status: "ACTIVE")
     @funds = Fund.all
     tickers = @positions.pluck(:ticker).join(", ")
     @stocks = StockQuote::Stock.raw_quote(tickers)
-
-    # fund = Fund.find(23)
-    # fund.transactions.where(user_id: 89)
   end
 
   # GET /positions/1

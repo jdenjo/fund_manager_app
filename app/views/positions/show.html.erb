@@ -1,57 +1,25 @@
 <div class="card">
   <div class="card-header"> Position Details </div>
   <div class="card-body">
-    <p>
-      <strong>Ticker:</strong>
-      <%= @position.ticker %>
-    </p>
-    <p>
-      <strong>Position:</strong>
-      <%= @position.positionType %>
-    </p>
-    <p>
-      <strong>PM:</strong>
-      <a href="/users/<%= @position.user.id %>"> <%= @position.user.full_name %></a>
-    </p>
+    <% @stock = StockQuote::Stock.raw_quote(@position.ticker)[@position.ticker]["quote"] %>
+    <p><strong>Ticker:</strong><%= @stock["symbol"] %></p>
+    <p><strong>Company:</strong><%= @stock["companyName"] %></p>
+    <p><strong>Primary Exchange:</strong><%= @stock["primaryExchange"] %></p>
+    <p><strong>Position:</strong><%= @position.positionType %></p>
+    <p><strong>PM:</strong><a href="/users/<%= @position.user.id %>"> <%= @position.user.full_name %></a></p>
     <p>
       <strong>Fund:</strong>
       <a href="/funds/<%= @position.fund.id%>%"><%= @position.fund.name %></a>
     </p>
-     <p>
+    <p>
       <strong>Status:</strong>
       <%= @position.status %>
     </p>
     <p>
-      <strong>First trade:</strong>
+      <strong>Opened:</strong>
       <%= dateFormat(@position.created_at) %></a>
   </p>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Entry Date</th>
-        <th scope="col">Fund</th>
-        <th scope="col">Price</th>
-        <th scope="col">Shares</th>
-        <th scope="col">Book Value</th>
-        <th scope="col">Investment Reason</th>
-        <th scope="col">Analyst</th>
-        <th scope="col">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @position.transactions.each do |transaction| %>
-        <tr>
-          <td> <%= dateFormat(transaction.created_at) %></td>
-          <td> <%= transaction.fund.name %></td>
-          <td><%= number_to_currency(transaction.price) %></td>
-          <td><%= commaNumber(transaction.shares) %></td>
-          <td><%= number_to_currency(transaction.cost) %></td>
-                    <td><%= transaction.reason %></td>
-          <td> <a href="/users/<%=transaction.user.id %>"> <%= transaction.user.full_name %></a></td>
-          <td> <%= transaction.status %>
-        </tr>
-      <%end%>
-    </tbody>
-    <table>
-    </div>
-  </div>
+  <% @transactions = @position.transactions%>
+  <%= render 'layouts/tradesTable' %>
+</div>
+</div>

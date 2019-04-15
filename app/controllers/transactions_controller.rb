@@ -8,11 +8,8 @@ class TransactionsController < ApplicationController
     @type = params[:type]
     @stock = StockQuote::Stock.quote(@position.ticker)
     @users = User.all
-  end
-
-  def addTrim
-    id = params[:id]
-    @position = Position.find(id)
+    @funds = Fund.all
+    @transaction = Transaction.new
   end
 
   # GET /transactions
@@ -42,9 +39,9 @@ class TransactionsController < ApplicationController
   def create
     fund = Fund.find(transaction_params["fund"])
     cost = transaction_params["price"].to_f * transaction_params["shares"].to_f.abs
-
     shares = 0
 
+    #see if it is a negative share or positive share transaction
     if transaction_params["tradeType"] == "SHORT" || transaction_params["tradeType"] == "SELL"
       shares = transaction_params["shares"].to_f * -1
     else
@@ -75,21 +72,20 @@ class TransactionsController < ApplicationController
     end
 
     # if there is an active existing position add to it
-    if Position.where(ticker: @transaction.ticker, fund: @transaction.fund, status: "ACTIVE").exists?
+    if transaction_params["position"]
+      @transaction.position = Position.find(transaction_params["position"])
+    elsif Position.where(ticker: @transaction.ticker, fund: @transaction.fund, status: "ACTIVE").exists?
       @transaction.position = Position.where(ticker: @transaction.ticker, fund: @transaction.fund)[0]
-      #TODO Reject if its a long position when an existing short is made
-      #regulation wise you cant long and short a position at the same time
-      # else make a new position
     else
-      Position.create(
+      p = Position.create(
         ticker: @transaction.ticker,
         sector: @transaction.sector,
-        user_id: @transaction.fund.pm,
+        user_id: @transaction.fund.pm.id,
         fund: @transaction.fund,
         status: "ACTIVE",
         positionType: positionType,
       )
-      @transaction.position = Position.last
+      @transaction.position = p
     end
 
     position = @transaction.position
@@ -145,6 +141,6 @@ class TransactionsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def transaction_params
-    params.require(:transaction).permit(:fund, :sector, :priceType, :tradeType, :traderInstruction, :user, :shares, :price, :status, :reason, :position_id, :ticker)
+    params.require(:transaction).permit(:fund, :position, :sector, :priceType, :tradeType, :traderInstruction, :user, :shares, :price, :status, :reason, :position_id, :ticker)
   end
 end

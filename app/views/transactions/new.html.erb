@@ -4,21 +4,14 @@
     <form action="/" id="new-trade">
       <p><span id="search-message"></span></p>
       Ticker<br />
-
       <input type="text" name="ticker" id="ticker" class="form-control" value="<%=@searchTicker %>">
       <br />
       <input type="submit" value="Search" class="btn btn-dark"> <br />
       <br />
     </form>
+    <%= render 'form', transaction: @transaction %>
   </div>
-  </div>
-  <div class="stock-details"  >
-    <div class="card">
-      <div class="card-header">Trade Details</div>
-      <div class="card-body">
-        <%= render 'form', transaction: @transaction %>
-      </div>
-    </div>
-  </div>
+</div>
+</div>
 </div>
 </div>

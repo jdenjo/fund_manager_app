@@ -24,6 +24,7 @@ super_user = User.create(
 )
 
 roles = ["PM", "Analyst"]
+type = ["BUY"]
 
 3.times do
   first_name = Faker::Name.first_name
@@ -38,7 +39,6 @@ roles = ["PM", "Analyst"]
 end
 
 strategies = ["Activist", "Long Short Alpha", "Fundamental Value", "small mid caps", "Alpha capture", "Distressed", "Fundamental Growth", "Multi-strategy"]
-funds = ["Fund A", "Fund B", "Fund C", "Fund D", "Fund E"]
 
 stocks = StockQuote::Stock.raw_quote(
   "GOOG,
@@ -67,7 +67,7 @@ stocks = StockQuote::Stock.raw_quote(
 
 users = User.all
 
-5.times do |i|
+4.times do |i|
   inception = Faker::Date.backward(365 * 5)
 
   #reload new tickers for each fund
@@ -104,7 +104,7 @@ users = User.all
     inception: inception,
   )
 
-  rand(20).times do
+  rand(10..20).times do
     @tickers.shuffle!
     tickerData = @tickers.last
     @tickers.pop
@@ -120,13 +120,13 @@ users = User.all
       ticker: tickerData,
       user: userData,
       fund: Fund.last,
-      status: "active",
+      status: "ACTIVE",
       sector: sector,
       positionType: "LONG",
     )
 
-    4.times do
-      shares = rand(1000..100000)
+    rand(1..5).times do
+      shares = rand(10000000..20000000) / stocks[tickerData]["quote"]["latestPrice"]
       price = stocks[tickerData]["quote"]["latestPrice"] * rand(0.85..1.1)
       cost = price.to_f * shares.to_f
 
@@ -137,11 +137,11 @@ users = User.all
         cost: cost,
         position: Position.last,
         reason: Faker::Hipster.sentence,
-        status: "active",
+        status: "ACTIVE",
         created_at: Faker::Date.backward(90),
         fund: Fund.last,
         user: userData,
-        tradeType: "BUY",
+        tradeType: type.sample,
       )
 
       position = Position.last

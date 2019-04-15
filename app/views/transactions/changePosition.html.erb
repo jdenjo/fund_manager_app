@@ -1,12 +1,11 @@
 <div class="card">
   <div class="card-header"> Change Position </div>
   <div class="card-body">
-    <% @funds = Fund.all %>
-    <% transaction = Transaction.new %>
-    <%= simple_form_for transaction do |f| %>
+    <%= simple_form_for @transaction do |f| %>
       <%= f.input :ticker, required: true, input_html: { value: @position.ticker,  :readonly => true  } %>
       <%= f.input :tradeType, :label => "Order Type", required: true, input_html: { value: @type,  :readonly => true  } %>
       <%= f.input :fund, input_html: { value: @position.fund.id,  :readonly => true  }, :as => :hidden, required: true %>
+      <%= f.input :position, input_html: { value: @position.id,  :readonly => true  }, :as => :hidden, required: true %>
       <%= f.input :user,  input_html: { value: @position.user.id,  :readonly => true  }, :as => :hidden, required: true %>
       <div class="form-group">
       <%= f.input :shares, :label => "Number of Shares", required: true %>

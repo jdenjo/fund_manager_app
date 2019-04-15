@@ -1,7 +1,9 @@
+  <% total = @positions.sum(:averageCost) %>
   <table class="table">
       <thead class="thead-dark">
         <tr class="table-header">
           <th  />
+          <th> Exp </th>
           <th >Ticker</th>
           <th>Position</th>
           <th>Company</th>
@@ -9,7 +11,7 @@
           <th>Entry</th>
           <th>Avg</th>
           <th>Spot</th>
-          <th>Shares</th>
+          <th>Qty</th>
           <th>Book</th>
           <th>Market </th>
           <th>PnL</th>
@@ -21,14 +23,16 @@
       <tbody>
         <% totalBook = 0%>
         <% totalMarket = 0%>
-        <% @positions.each do |position| %>
+        <% @positions.where(status: "ACTIVE").each do |position| %>
           <% stock = @stocks[position.ticker]["quote"]%>
           <% bookValue = position.averageCost %>
           <% totalBook += bookValue%>
           <% marketValue = stock["latestPrice"] * position.totalShares.abs %>
           <% totalMarket += marketValue%>
           <tr class="position-row">
+          
             <td class="plus-dropdown" id="<%= position.ticker %>">+</td>
+            <td> <%= number_to_percentage(bookValue/total*100, precision: 1) %> </td>
             <td><a href="/positions/<%=position.id%>"> <%= position.ticker %></a></td>
             <td><%= position.positionType%></td>
             <td><%= stock["companyName"].truncate(13) %></td>
@@ -71,10 +75,10 @@
               <td />
               <td />
               <td />
-              <td><%= transaction.created_at.strftime("%m/%d/%Y")   %></td>
+              <td />
+              <td><%= tableDateFormat transaction.created_at   %></td>
               <td><%= transaction.tradeType %></td>
               <td><%= number_to_currency(transaction.price) %></td>
-              <td />
               <td><%= number_with_delimiter(transaction.shares, :delimiter => ',') %></td>
               <td><%= number_to_currency(tBook/1000) %> </td>
               <td><%= number_to_currency(tMarket/1000) %></td>
@@ -84,7 +88,7 @@
             </tr>
           <% end %>
         <% end %>
-        <tr >
+        <tr class="row-total">
           <td></td>
           <td>Total</td>
           <td></td>
@@ -96,8 +100,11 @@
           <td></td>
           <td><%= number_to_currency(totalBook/1000) %></td>
           <td><%= number_to_currency(totalMarket/1000) %></td>
-          <td><%= number_to_currency((totalMarket - totalBook)/1000) %></td>
-          <td><%= (((totalMarket / totalBook )-1) * 100).round(1) %> %</td>
+
+         
+          <% (totalMarket - totalBook) > 0 ? pnlClass = "positive" : pnlClass = "negative"  %>
+          <td class="<%= pnlClass %>"><%= number_to_currency((totalMarket - totalBook)/1000) %></td>
+          <td class="<%= pnlClass %>"><%= (((totalMarket / totalBook )-1) * 100).round(1) %> %</td>
           <td></td>
           <td colspan="4"></td>
         </tr>

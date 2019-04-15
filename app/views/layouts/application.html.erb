@@ -5,6 +5,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
     <%= javascript_include_tag 'application' %>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -24,8 +25,9 @@
             <li class="nav-item active"> <%= link_to("Funds", funds_path, :class=>"nav-link")  %> </li>
             <li class="nav-item active"> <%= link_to("Positions", positions_path, :class=>"nav-link")  %> </li>
             
-            <li class="nav-item active"> <%= link_to("Trades", transactions_path, :class=>"nav-link")  %> </li>
+
             <% if current_user%>
+            <li class="nav-item active"> <%= link_to("Trades", user_path(current_user), :class=>"nav-link")  %> </li>
               <li class="nav-item active"> <%= link_to("Signed in (#{current_user.email})", user_path(current_user), :class=>"nav-link") %></li>
               <li class="nav-item active"> <%= link_to("Sign Out", sessions_path, :class=>"nav-link", :method => "delete") %></li>
             <% else %>

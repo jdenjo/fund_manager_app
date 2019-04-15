@@ -29,6 +29,9 @@ gem "simple_form"
 
 gem "bootstrap"
 
+gem "awesome_print"
+
+gem "chartkick"
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

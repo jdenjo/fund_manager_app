@@ -16,7 +16,7 @@
  *= require_self
  */
  
- .position-row{
+ .row-total{
      font-weight: bold
  }
 
@@ -77,4 +77,19 @@ table{
 
 abbr[title="required"] {
     display: none;
+  }
+
+  .flex-grid {
+    display: flex;
+  }
+  .col {
+    flex: 1;
+  }
+
+
+
+  
+
+  .trade-button{
+      text-align: right
   }

@@ -1,32 +1,66 @@
-<div class="card">
-  <div class="card-header">
-    <%= @fund.name %>
+    <%
+
+exposures = {}
+aum = @positions.sum('averageCost')
+
+@positions.each do |position|
+  if exposures.key?(position.sector)
+  sum = exposures[position.sector] + position.averageCost.round
+  exposures[position.sector] =  sum
+  else 
+    exposures[position.sector] = position.averageCost.round
+  end
+end
+%>
+<div class="card-deck">
+  <div class="card">
+    <div class="card-header">
+      Fund Details
+    </div>
+    <div class="card-body">
+      <p>
+        <strong>Name:</strong>
+        <%= @fund.name %>
+      </p>
+      <p>
+        <strong>Strategy:</strong>
+        <%= @fund.strategy %>
+      </p>
+      <p>
+        <strong>AUM:</strong>
+        <%= number_to_currency(aum) %>
+      </p>
+      <p>
+        <strong>Inception:</strong>
+        <%= @fund.inception.strftime("%m/%Y") %>
+      </p>
+      <p>
+        <strong>Portfolio Manager:</strong>
+        <a href="/users/<%=@fund.pm.id %>"> <%= @fund.pm.first_name + " " + @fund.pm.last_name %> </a>
+      </p>
+    </div>
   </div>
-  <div class="card-body">
-    <p>
-      <strong>Strategy:</strong>
-      <%= @fund.strategy %>
-    </p>
-    <p>
-      <strong>Aum:</strong>
-      <%= number_to_currency(@fund.AUM) %>
-    </p>
-    <p>
-      <strong>Inception:</strong>
-      <%= dateFormat(@fund.inception) %>
-    </p>
-    <p>
-      <strong>Portfolio Manager:</strong>
-      <a href="/users/<%=@fund.pm.id %>"> <%= @fund.pm.first_name + " " + @fund.pm.last_name %> </a>
-    </p>
+  <div class="card">
+    <div class="card-header"> Sector Exposure </div>
 
-    <a href="/transactions/new" class="btn btn-secondary active" role="button" aria-pressed="true">Add Position</a>
-
+      <%= pie_chart exposures , library: { pieSliceText: 'value-and-percentage',  legend: "none" }  %>
+  </div>
+  <div class="card">
+  <div class="card-header">Largest Positions</div>
+  <%= bar_chart (@positions.group(:ticker).sum(:averageCost).sort_by{|_key, value| value}).last(10) %>
+  <div class="card-body"> </div>
   </div>
 </div>
 <div class="card">
-  <div class="card-header">Active Positions</div>
-  <div class="card-body">
-    <p class="unit">(Thousands)</p>
-    <%= render 'table' %>
+  <div class="card-header">
+    <div class=flex-grid>
+      <div class="col">Active Positions</div>
+      <div class="col trade-button" ><a href="/transactions/new" class="btn btn-secondary btn-sm" role="button" aria-pressed="true">Add New Position</a>
+      </div>
+    </div>
   </div>
+  <div class="card-body">
+    <%= render 'layouts/table' %>
+  </div>
+</div>
+<div class="card ">

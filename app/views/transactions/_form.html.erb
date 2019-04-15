@@ -13,7 +13,7 @@
   <%= f.input :user, :label => "Analyst", :label_method => :full_name, collection: @users, required: true %>
   <%= f.input :shares, :label => "Number of Shares", required: true %>
   <%= f.input :priceType, :label => "Order Method", collection: [['Limit','Limit'], ['Market','Market']], as: :radio_buttons, :checked => ['Market', 'Market'] %>
-  <%= f.input :price,  required: true %>
+  <%= f.input :price,  required: true, :readonly => true %>
   <%= f.input :reason, :label => "Investment Reason", required: true %>
   <%= f.input :traderInstruction, :label => "Special Instructions to Trader (Optional)" %>
   <%= f.button :submit, class: 'btn btn-dark' %>

@@ -45,6 +45,7 @@ GEM
     arel (9.0.0)
     autoprefixer-rails (9.5.1)
       execjs
+    awesome_print (1.8.0)
     bcrypt (3.1.12)
     bindex (0.7.0)
     bootsnap (1.4.3)
@@ -55,6 +56,7 @@ GEM
       sassc-rails (>= 2.0.0)
     builder (3.2.3)
     byebug (11.0.1)
+    chartkick (3.0.2)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
     domain_name (0.5.20180417)
@@ -203,10 +205,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.1.0)
   bootstrap
   byebug
+  chartkick
   faker
   jbuilder (~> 2.5)
   jquery-rails
