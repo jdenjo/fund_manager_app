@@ -9,6 +9,7 @@
   <% totalBook = 0%>
   <% totalMarket = 0%>
   <% @positions = fund.positions.where(user_id: current_user.id)%>
+  
   <% if @positions.length > 0 %>
     <div class="card">
       <div class="card-header"><%= fund.name %></div>

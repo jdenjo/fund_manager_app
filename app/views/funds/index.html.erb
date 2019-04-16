@@ -1,8 +1,7 @@
 <div class="container">
-  <div class="row mt-5 justify-content-center">
 
       <% @funds.each do |fund| %>
-       <div class="card card-custom mx-5 mb-5">
+       <div class="card">
           <div class="card-header"><%= fund.name %></div>
           <div class="card-body">
             <p><%= fund.strategy %></p>
@@ -14,7 +13,5 @@
         </div>
       <% end %>
     </div>
-  </div>
-
 <br />
 <%= link_to 'New Fund', new_fund_path %>
