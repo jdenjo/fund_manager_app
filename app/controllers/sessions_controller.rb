@@ -1,7 +1,7 @@
 class SessionsController < ApplicationController
   def new
     if !current_user.nil? 
-      redirect_to positions_path
+      redirect_to "/positions/?id=#{current_user.id}"
     end
   end
 

@@ -1,17 +1,10 @@
-<div class="container">
-
       <% @funds.each do |fund| %>
-       <div class="card">
-          <div class="card-header"><%= fund.name %></div>
-          <div class="card-body">
-            <p><%= fund.strategy %></p>
-            <p><%= fund.AUM %></p>
-            <p><%= fund.inception %></p>
-            <p><%= fund.pm.first_name + " " + fund.pm.last_name %></p>
-            <p><%= link_to 'Show', fund %> | <%= link_to 'Edit', edit_fund_path(fund) %> | <%= link_to 'Destroy', fund, method: :delete, data: { confirm: 'Are you sure?' } %></p>
-          </div>
+      <div class="card">
+        <div class="card-header"><a href="/funds/<%=fund.id%>"><%= fund.name %></a></div>
+        <div class="card-body">
+          <%= render 'layouts/table' %>
         </div>
+      </div>
       <% end %>
-    </div>
-<br />
-<%= link_to 'New Fund', new_fund_path %>
+
+      <%= link_to 'New Fund', new_fund_path %>

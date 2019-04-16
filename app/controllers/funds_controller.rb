@@ -6,6 +6,9 @@ class FundsController < ApplicationController
   # GET /funds.json
   def index
     @funds = Fund.all
+    @positions = Position.where(user_id: current_user.id, status: "ACTIVE")
+    tickers = @positions.pluck(:ticker).join(", ")
+    @stocks = StockQuote::Stock.raw_quote(tickers)
   end
 
   # GET /funds/1

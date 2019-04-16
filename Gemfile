@@ -32,6 +32,10 @@ gem "bootstrap"
 gem "awesome_print"
 
 gem "chartkick"
+
+gem 'groupdate'
+
+
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

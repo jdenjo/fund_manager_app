@@ -5,7 +5,7 @@ class PositionsController < ApplicationController
   # GET /positions
   # GET /positions.json
   def index
-    @positions = Position.where(user_id: current_user.id, status: "ACTIVE")
+    @positions = Position.where(user_id: params[:id] , status: "ACTIVE")
     @funds = Fund.all
     tickers = @positions.pluck(:ticker).join(", ")
     @stocks = StockQuote::Stock.raw_quote(tickers)
