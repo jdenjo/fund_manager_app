@@ -7,7 +7,6 @@
           <th >Ticker</th>
           <th>Position</th>
           <th>Company</th>
-          <th>Sector</th>
           <th>Entry</th>
           <th>Avg</th>
           <th>Spot</th>
@@ -36,7 +35,6 @@
             <td><a href="/positions/<%=position.id%>"> <%= position.ticker %></a></td>
             <td><%= position.positionType%></td>
             <td><%= stock["companyName"].truncate(13) %></td>
-            <td><%= position.sector ? position.sector.truncate(13) : "Diversified" %></td>
             <td><%= tableDateFormat(position.created_at) %></td>
             <td><%= number_to_currency(position.averagePrice) %></td>
             <td><%= number_to_currency(stock["latestPrice"]) %></td>

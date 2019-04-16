@@ -1,5 +1,8 @@
 class SessionsController < ApplicationController
   def new
+    if !current_user.nil? 
+      redirect_to positions_path
+    end
   end
 
   def create
@@ -11,7 +14,7 @@ class SessionsController < ApplicationController
       # session for later retrieval.
       session[:user_id] = user.id
       flash[:notice] = "Logged In"
-      redirect_to home_path
+      redirect_to positions_path
     else
       flash[:alert] = "Wrong email or password"
       render :new
