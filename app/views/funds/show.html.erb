@@ -51,16 +51,16 @@ end
   <div class="card-body"> </div>
   </div>
 </div>
+
 <div class="card">
   <div class="card-header">
-    <div class=flex-grid>
-      <div class="col">Active Positions</div>
-      <div class="col trade-button" ><a href="/transactions/new" class="btn btn-secondary btn-sm" role="button" aria-pressed="true">Add New Position</a>
-      </div>
-    </div>
+Active Positions
   </div>
   <div class="card-body">
     <%= render 'layouts/table' %>
   </div>
+
+  <div class="card-footer" style="text-align: right">
+    <%= link_to 'New Trade', new_transaction_path  %>
+  </div>
 </div>
-<div class="card ">

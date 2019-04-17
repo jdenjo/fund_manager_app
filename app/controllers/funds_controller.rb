@@ -5,10 +5,9 @@ class FundsController < ApplicationController
   # GET /funds
   # GET /funds.json
   def index
-    @funds = Fund.all
-    @positions = Position.where( status: "ACTIVE")
-    tickers = @positions.pluck(:ticker).join(", ")
-    @stocks = StockQuote::Stock.raw_quote(tickers)
+    if params[:id]
+      @fund = Fund.find(params[:id])
+    end
   end
 
   # GET /funds/1

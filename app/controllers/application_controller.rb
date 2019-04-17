@@ -21,6 +21,12 @@ class ApplicationController < ActionController::Base
 
   helper_method(:dateFormat)
 
+  def percentPnL(pnLPercent)
+    return sprintf("%+.1f", ((pnLPercent).round(1)))
+  end
+
+  helper_method(:percentPnL)
+
   def tableDateFormat(date)
     return date.strftime("%m/%d/%y")
   end

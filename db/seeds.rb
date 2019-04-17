@@ -23,6 +23,20 @@ super_user = User.create(
   role: "PM",
 )
 
+reasons = [
+"Earnings coming up",
+"Increased newsflow",
+"Trimming before earnings",
+"Feel consensus estimates will come up",
+"Earnings over trimming",
+"Locking in profit after rise",
+"Trade is too crowded, trimming",
+"Excessive fall, increasing position",
+"Excessive rise, trimming position",
+"Investor day in the next few weeks",
+"Distressed event in the news"
+]
+
 roles = ["PM", "Analyst"]
 type = ["BUY"]
 
@@ -136,7 +150,7 @@ users = User.all
         shares: shares,
         cost: cost,
         position: Position.last,
-        reason: Faker::Hipster.sentence,
+        reason: reasons.sample,
         status: "ACTIVE",
         created_at: Faker::Date.backward(90),
         fund: Fund.last,

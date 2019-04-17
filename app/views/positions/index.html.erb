@@ -2,13 +2,14 @@
   <div class="card-header"> View Positions</div>
   <div class="card-body">
 
-
     <form action="/positions" method="get">
       <div class="form-group form-inline">
-        <label for="exampleInputEmail1">Analyst: &nbsp;  </label>
-        <select name="id" id="id" onchange="this.form.submit()">
+        <label for="exampleInputEmail1">Choose Advisor: &nbsp; </label>
+        <select class="form-control" name="id" id="id" onchange="this.form.submit()">
           <% @users = User.all%>
+
           <% @users.each do |user| %>
+
           <% if params[:id].to_i == user.id %>
           <option selected="selected" value="<%= user.id %>"><%= user.full_name%></option>
           <% else %>
@@ -17,9 +18,7 @@
           <% end %>
         </select>
       </div>
-
     </form>
-
   </div>
 </div>
 
@@ -30,6 +29,9 @@
   </div>
   <div class="card-body card-table">
     <%= render 'layouts/table' %>
+  </div>
+  <div class="card-footer" style="text-align: right">
+    <%= link_to 'New Trade', new_transaction_path  %>
   </div>
 </div>
 
@@ -44,6 +46,9 @@
   <div class="card-header"><%= fund.name %></div>
   <div class="card-body card-table">
     <%= render 'layouts/table' %>
+  </div>
+  <div class="card-footer" style="text-align: right">
+    <%= link_to 'New Trade', new_transaction_path  %>
   </div>
 </div>
 <% end %>

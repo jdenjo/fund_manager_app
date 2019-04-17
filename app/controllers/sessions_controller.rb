@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
       # session for later retrieval.
       session[:user_id] = user.id
       flash[:notice] = "Logged In"
-      redirect_to positions_path
+      redirect_to "/positions/?id=#{current_user.id}"
     else
       flash[:alert] = "Wrong email or password"
       render :new

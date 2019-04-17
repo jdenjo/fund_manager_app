@@ -15,8 +15,12 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = Transaction.where(user_id: current_user.id)
-  end
+    if params["id"].to_i > 0
+      @transactions = Transaction.where(user_id: params["id"]).order('created_at DESC')
+      else
+      @transactions = Transaction.all.order('created_at DESC') 
+      end
+    end
 
   # GET /transactions/1
   # GET /transactions/1.json
