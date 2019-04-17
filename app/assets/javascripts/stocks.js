@@ -42,6 +42,18 @@ $(document).ready(() => {
                 })
 
         });
+
+        document.querySelector('#transaction_shares').addEventListener('input', (event) => {
+                 
+            $('#transaction_cost').val($('#transaction_shares').val() * $('#transaction_price').val());
+        });
+
+        document.querySelector('#transaction_price').addEventListener('input', (event) => {
+                 
+            $('#transaction_cost').val($('#transaction_shares').val() * $('#transaction_price').val());
+        });
+
+        
     }
 
     if (document.querySelector('#transaction_priceType_limit')) {
