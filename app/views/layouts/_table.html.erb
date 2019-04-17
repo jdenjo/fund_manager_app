@@ -115,7 +115,7 @@
           <td class="<%= pnlClass %>"><%= percentPnL((totalMarket / totalBook -1) *100)  %> %</td>
           <% dayGainLoss > 0 ? pnlClass = "positive" : pnlClass = "negative"  %>
           <td class="<%= pnlClass %>"><%= number_to_currency(dayGainLoss, precision: 0) %></td>
-          <td class="<%= pnlClass %>"><%= percentPnL(dayGainLoss/totalMarket * 100) %>%</td>
+          <td class="<%= pnlClass %>"><%= percentPnL(dayGainLoss/(totalMarket/1000) * 100) %>%</td>
           <td colspan="4"></td>
         </tr>
       </tbody>

@@ -5,8 +5,10 @@ class FundsController < ApplicationController
   # GET /funds
   # GET /funds.json
   def index
-    if params[:id]
+    if params[:id].to_i > 0
       @fund = Fund.find(params[:id])
+    elsif params[:id].to_i == 0
+      @funds = Fund.all
     end
   end
 

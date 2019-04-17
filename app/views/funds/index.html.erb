@@ -8,9 +8,9 @@
            <div class="form-group form-inline">
              <label for="exampleInputEmail1">Select fund: &nbsp; </label>
              <select width="750px" class="form-control" name="id" id="id" onchange="this.form.submit()">
-               <option disabled selected value> -- select a fund -- </option>
-               <% @funds = Fund.all%>
-               <% @funds.each do |fund| %>
+               <option selected value="0"> All Funds </option>
+               <% @fundSelection = Fund.all%>
+               <% @fundSelection.each do |fund| %>
                <% if params[:id].to_i == fund.id %>
                <option selected="selected" value="<%= fund.id %>"><%= fund.name%></option>
                <% else %>
@@ -20,33 +20,49 @@
              </select>
            </div>
          </form>
-         </div>
-
-
-         <div class="card-footer" style="text-align: right">
-           <%= link_to 'New Fund', new_fund_path %>
-           <% if params["id"] %>
-           <% fund = Fund.find(params["id"]) %> |
-           <%= link_to 'Edit Fund', edit_fund_path(fund) %> |
-           <%= link_to 'Delete Fund', fund, method: :delete, data: {confirm: 'Are you sure?'} %>
-           <% end %>
-         </div>
-
        </div>
-
-       <% if !@fund.nil? %>
-       <div class="card">
-         <div class="card-header">
-           <a href="/funds/<%=@fund.id%>"><%= @fund.name %></a>
-         </div>
-         <div class="card-body card-table">
-           <% @positions = @fund.positions.where( status: "ACTIVE") %>
-           <% tickers = @positions.pluck(:ticker).join(", ") %>
-           <% @stocks = StockQuote::Stock.raw_quote(tickers) %>
-           <%= render 'layouts/table' %>
-         </div>
-         <div class="card-footer" style="text-align:right">
-           <%= link_to 'New Trade', new_transaction_path  %>
-         </div>
+       <div class="card-footer" style="text-align: right">
+         <%= link_to 'New Fund', new_fund_path %>
+         <% if params["id"].to_i > 0 %>
+         <% fund = Fund.find(params["id"]) %> |
+         <%= link_to 'Edit Fund', edit_fund_path(fund) %> |
+         <%= link_to 'Delete Fund', fund, method: :delete, data: {confirm: 'Are you sure?'} %>
+         <% end %>
        </div>
-       <% end %>
+     </div>
+
+     <% if @funds %>
+     <% @funds.each do |fund| %>
+     <div class="card">
+       <div class="card-header">
+         <a href="/funds/<%=fund.id%>"><%= fund.name %></a>
+       </div>
+       <div class="card-body card-table">
+         <% @positions = fund.positions.where( status: "ACTIVE") %>
+         <% tickers = @positions.pluck(:ticker).join(", ") %>
+         <% @stocks = StockQuote::Stock.raw_quote(tickers) %>
+         <%= render 'layouts/table' %>
+       </div>
+       <div class="card-footer" style="text-align:right">
+         <%= link_to 'New Trade', new_transaction_path  %>
+       </div>
+     </div>
+     <% end %>
+     <% end %>
+
+     <% if @fund %>
+     <div class="card">
+       <div class="card-header">
+         <a href="/funds/<%=@fund.id%>"><%= @fund.name %></a>
+       </div>
+       <div class="card-body card-table">
+         <% @positions = @fund.positions.where( status: "ACTIVE") %>
+         <% tickers = @positions.pluck(:ticker).join(", ") %>
+         <% @stocks = StockQuote::Stock.raw_quote(tickers) %>
+         <%= render 'layouts/table' %>
+       </div>
+       <div class="card-footer" style="text-align:right">
+         <%= link_to 'New Trade', new_transaction_path  %>
+       </div>
+     </div>
+     <% end %>

@@ -28,7 +28,7 @@ end
       </p>
       <p>
         <strong>AUM:</strong>
-        <%= number_to_currency(aum) %>
+        <%= number_to_currency(aum, precision: 0) %>
       </p>
       <p>
         <strong>Inception:</strong>
@@ -37,6 +37,10 @@ end
       <p>
         <strong>Portfolio Manager:</strong>
         <a href="/users/<%=@fund.pm.id %>"> <%= @fund.pm.first_name + " " + @fund.pm.last_name %> </a>
+      </p>
+      <p>
+        <strong>Active Positions:</strong>
+      <%= Position.where(fund_id: @fund.id).size %>
       </p>
     </div>
   </div>
