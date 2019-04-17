@@ -1,20 +1,20 @@
   <% total = @positions.sum(:averageCost) %>
   <table class="table">
-      <thead class="thead-dark">
+      <thead class="thead-dark table-header">
         <tr class="table-header">
           <th  />
           <th> Exp </th>
           <th >Ticker</th>
           <th>Position</th>
-          <th>Company</th>
-          <th>Entry</th>
           <th>Avg</th>
           <th>Spot</th>
-          <th>Qty</th>
-          <th>Book</th>
-          <th>Market </th>
-          <th>PnL</th>
-          <th>PnL(%) </th>
+          <th>Qty <br /> (000's)</th>
+          <th>Cost <br /> (000's)</th>
+          <th>M2M <br /> (000's) </th>
+          <th>PnL <br /> (000's)</th>
+          <th>PnL<br />(%) </th>
+          <th>Day PnL <br />(000's)  </th>
+          <th>Day PnL <br /> (%) </th>
           <th>Analyst</th>
           <th colspan="2"></th>
         </tr>
@@ -34,26 +34,26 @@
             <td> <%= number_to_percentage(bookValue/total*100, precision: 1) %> </td>
             <td><a href="/positions/<%=position.id%>"> <%= position.ticker %></a></td>
             <td><%= position.positionType%></td>
-            <td><%= stock["companyName"].truncate(13) %></td>
-            <td><%= tableDateFormat(position.created_at) %></td>
             <td><%= number_to_currency(position.averagePrice) %></td>
             <td><%= number_to_currency(stock["latestPrice"]) %></td>
             <td><%= number_with_delimiter(position.totalShares, :delimiter => ',') %> </td>
-            <td><%= number_to_currency(bookValue/1000)  %></td>
-            <td><%= number_to_currency( marketValue/1000)  %> </td>
-            <%
-        pnL = position.positionType == "LONG" ? (marketValue - bookValue )/1000 :  (bookValue - marketValue)/1000
-        pnLPercent = position.positionType == "LONG" ? (marketValue / bookValue -1) * 100 :  ( bookValue / marketValue -1) * 100 
-        
-        if (pnL) > 0 
-            pnlClass = "positive" 
-        else
-            pnlClass = "negative" 
-        end 
-        %>
-            <td class="<%= pnlClass %>"><%= number_to_currency(pnL) %></td>
+            <td><%= number_to_currency(bookValue/1000, precision: 0)  %></td>
+            <td><%= number_to_currency( marketValue/1000, precision: 0)  %> </td>
+            
+            <% pnL = position.positionType == "LONG" ? (marketValue - bookValue )/1000 :  (bookValue - marketValue)/1000 %>
+            <% pnLPercent = position.positionType == "LONG" ? (marketValue / bookValue -1) * 100 :  ( bookValue / marketValue -1) * 100 %>
+            <% pnL > 0 ? pnlClass = "positive" : pnlClass = "negative" %>
+            
+            <td class="<%= pnlClass %>"><%= number_to_currency(pnL, precision: 0) %></td>
             <td class="<%= pnlClass %>"><%= sprintf("%+.1f", ((pnLPercent).round(1))) %> %</td>
-            <td></td>
+            
+            <% dayPnL = position.positionType == "LONG" ? (stock['previousClose'] * position.totalShares) * stock['changePercent'] /1000 : (stock['previousClose'] * position.totalShares) * stock['changePercent'] /1000 * -1 %>       
+            <% dayPnL > 0 ? dayPnLClass = "positive" : dayPnLClass = "negative" %>
+            
+            <td class="<%= dayPnLClass %>"> <%= number_to_currency(dayPnL, precision: 0) %></td>
+            <td class="<%= dayPnLClass %>"> <%= number_to_percentage(stock['changePercent'] * 100)  %></td>
+            <td><a href="/users/<%= position.user.id %>"><%=position.user.last_name %></a></td>
+
             <% if position.positionType == "LONG"
             option1 = "BUY"
             option2 = "SELL"
@@ -65,30 +65,36 @@
             <td><%= link_to "#{option1}", change_position_path(:id => position.id, :position => position, :type => option1 ) %></td>
             <td><%= link_to "#{option2}", change_position_path(:id => position.id, :position => position, :type => option2 ) %></td>
           </tr>
+
+
           <% position.transactions.each do |transaction| %>
             <% tBook = transaction.price * transaction.shares.abs %>
             <% tMarket = stock["latestPrice"] * transaction.shares.abs%>
-            <tr class=<%=transaction.ticker %> id="transaction-table">
+            <tr class="<%=transaction.ticker%> transaction-details" id="transaction-table">
               <td />
               <td />
               <td />
-              <td />
-              <td />
-              <td><%= tableDateFormat transaction.created_at   %></td>
               <td><%= transaction.tradeType %></td>
               <td><%= number_to_currency(transaction.price) %></td>
+              <td><%= number_to_currency(stock['latestPrice']) %></td>
               <td><%= number_with_delimiter(transaction.shares, :delimiter => ',') %></td>
-              <td><%= number_to_currency(tBook/1000) %> </td>
-              <td><%= number_to_currency(tMarket/1000) %></td>
+              <td><%= number_to_currency(tBook/1000, precision: 0 ) %> </td>
+              <td><%= number_to_currency(tMarket/1000, precision: 0) %></td>
               <td><%= number_to_currency( transaction.tradeType == "BUY" ? (tMarket - tBook)/1000 :  (tBook - tMarket)/1000 ) %> </td>
               <td><%= ((((tBook / tMarket)-1) * 100).round(1)) %> %</td>
-              <td><a href="/users/<%= position.user.id %>"><%= transaction.user.last_name %></a></td>
+              <td />
+              <td />
+              <td><a href="/users/<%= transaction.user.id %>"><%= transaction.user.last_name %></a></td>
+              <td />
+              <td />
             </tr>
           <% end %>
         <% end %>
+
+        
         <tr class="row-total">
-          <td></td>
           <td>Total</td>
+          <td>100%</td>
           <td></td>
           <td></td>
           <td></td>
@@ -96,8 +102,8 @@
           <td></td>
           <td></td>
           <td></td>
-          <td><%= number_to_currency(totalBook/1000) %></td>
-          <td><%= number_to_currency(totalMarket/1000) %></td>
+          <td><%= number_to_currency(totalBook/1000, precision: 0) %></td>
+          <td><%= number_to_currency(totalMarket/1000, precision: 0) %></td>
 
          
           <% (totalMarket - totalBook) > 0 ? pnlClass = "positive" : pnlClass = "negative"  %>

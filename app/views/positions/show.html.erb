@@ -1,34 +1,51 @@
-<div class="card">
-  <div class="card-header"> Position Details </div>
-  <div class="card-body">
-    <% @stock = StockQuote::Stock.raw_quote(@position.ticker)[@position.ticker]["quote"] %>
-    <p><strong>Ticker:</strong><%= @stock["symbol"] %></p>
-    <p><strong>Company:</strong><%= @stock["companyName"] %></p>
-    <p><strong>Primary Exchange:</strong><%= @stock["primaryExchange"] %></p>
-    <p><strong>Position:</strong><%= @position.positionType %></p>
-    <p><strong>PM:</strong><a href="/users/<%= @position.user.id %>"> <%= @position.user.full_name %></a></p>
-    <p>
-      <strong>Fund:</strong>
-      <a href="/funds/<%= @position.fund.id%>%"><%= @position.fund.name %></a>
-    </p>
-    <p>
-      <strong>Status:</strong>
-      <%= @position.status %>
-    </p>
-    <p>
-      <strong>Opened:</strong>
-      <%= dateFormat(@position.created_at) %></a>
-  </p>
+<div class="flex-grid">
+  <div class="col">
+    <div class="card">
+      <div class="card-header"> Key details </div>
+      <div class="card-body">
+        <% @stock = StockQuote::Stock.raw_quote(@position.ticker)[@position.ticker]["quote"] %>
+        <strong>Ticker:</strong><%= @stock["symbol"] %> <a
+          href="https://finance.yahoo.com/quote/<%=@stock['symbol'] %>/"> (More Details)</a>
+        <hr />
+        <strong>Company:</strong><%= @stock["companyName"] %>
+        <hr />
+        <strong>Primary Exchange:</strong><%= @stock["primaryExchange"] %>
+        <hr />
+        <strong>Position:</strong><%= @position.positionType %>
+        <hr />
+        <strong>Analyst:</strong><a href="/users/<%= @position.user.id %>"> <%= @position.user.full_name %></a>
+        <hr />
 
-  <%= line_chart User.group_by_day(:created_at).count %>
+        <strong>Fund:</strong>
+        <a href="/funds/<%= @position.fund.id%>%"><%= @position.fund.name %></a>
+        <hr />
 
+        <strong>Status:</strong>
+        <%= @position.status %>
+
+      </div>
+    </div>
   </div>
+
+<div class="col">
+
+  <div class="card">
+    <div class="card-header"> YTD performance </div>
+    <div class="card-body">
+      <% data = {}%>
+      <% @stockData.chart.each do |day| %>
+      <% data[day['date']] = day['close'] %>
+      <% end %>
+      <%= line_chart data, width: "650px", height: "350px", min: (@stock['close'] * 0.8), discrete: true,  points: false, legend: false  %>
+    </div>
   </div>
+</div>
+</div>
 
 <div class="card">
   <div class="card-header"> Transactions </div>
   <div class="card-body">
-  <% @transactions = @position.transactions%>
-  <%= render 'layouts/tradesTable' %>
-</div>
+    <% @transactions = @position.transactions%>
+    <%= render 'layouts/tradesTable' %>
+  </div>
 </div>

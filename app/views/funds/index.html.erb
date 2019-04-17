@@ -1,7 +1,7 @@
       <% @funds.each do |fund| %>
       <div class="card">
         <div class="card-header"><a href="/funds/<%=fund.id%>"><%= fund.name %></a></div>
-        <div class="card-body">
+        <div class="card-body card-table">
           <%= render 'layouts/table' %>
         </div>
       </div>

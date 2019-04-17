@@ -23,11 +23,11 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active"> <%= link_to("Funds", funds_path, :class=>"nav-link")  %> </li>
-            <li class="nav-item active"> <%= link_to("Positions", "/positions/?id=#{current_user.id}", :class=>"nav-link")  %> </li>
+            <li class="nav-item active"> <%= link_to("My Positions", "/positions/?id=#{current_user.id}", :class=>"nav-link")  %> </li>
             
 
             <% if current_user%>
-            <li class="nav-item active"> <%= link_to("Trade History", user_path(current_user), :class=>"nav-link")  %> </li>
+            <li class="nav-item active"> <%= link_to("My Trades", user_path(current_user), :class=>"nav-link")  %> </li>
               <li class="nav-item active"> <%= link_to("Signed in (#{current_user.email})", user_path(current_user), :class=>"nav-link") %></li>
               <li class="nav-item active"> <%= link_to("Sign Out", sessions_path, :class=>"nav-link", :method => "delete") %></li>
             <% else %>
@@ -38,7 +38,7 @@
           <% if current_user%>
           <form class="form-inline my-2 my-lg-0" action="/transactions/new">
             <input  name="ticker" class="form-control mr-sm-2" size="10" type="search" placeholder="" aria-label="Search">
-            <button class="btn btn-outline-secondary type="submit">New Trade</button>
+            <button class="btn btn-outline-secondary type="submit">Trade</button>
           </form>
          <% end %>
         </nav>

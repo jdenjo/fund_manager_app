@@ -14,6 +14,8 @@ class PositionsController < ApplicationController
   # GET /positions/1
   # GET /positions/1.json
   def show
+    @ticker = Position.find(params[:id]).ticker
+    @stockData = StockQuote::Stock.chart(@ticker, 'ytd')
   end
 
   # GET /positions/new

@@ -10,7 +10,6 @@
           <% @users = User.all%>
           <% @users.each do |user| %>
           <% if params[:id].to_i == user.id %>
-
           <option selected="selected" value="<%= user.id %>"><%= user.full_name%></option>
           <% else %>
           <option value="<%= user.id %>"><%= user.full_name%></option>
@@ -27,13 +26,13 @@
 
 <div class="card">
   <div class="card-header">
-
     All Positions
   </div>
-  <div class="card-body">
+  <div class="card-body card-table">
     <%= render 'layouts/table' %>
   </div>
 </div>
+
 <% @funds.each do |fund| %>
 <% totalBook = 0%>
 <% totalMarket = 0%>
@@ -43,7 +42,7 @@
 <% if @positions.length > 0 %>
 <div class="card">
   <div class="card-header"><%= fund.name %></div>
-  <div class="card-body">
+  <div class="card-body card-table">
     <%= render 'layouts/table' %>
   </div>
 </div>
