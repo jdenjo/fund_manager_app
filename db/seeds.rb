@@ -24,17 +24,17 @@ super_user = User.create(
 )
 
 reasons = [
-"Earnings coming up",
-"Increased newsflow",
-"Trimming before earnings",
-"Feel consensus estimates will come up",
-"Earnings over trimming",
-"Locking in profit after rise",
-"Trade is too crowded, trimming",
-"Excessive fall, increasing position",
-"Excessive rise, trimming position",
-"Investor day in the next few weeks",
-"Distressed event in the news"
+  "Earnings coming up",
+  "Increased newsflow",
+  "Trimming before earnings",
+  "Feel consensus estimates will come up",
+  "Earnings over trimming",
+  "Locking in profit after rise",
+  "Trade is too crowded, trimming",
+  "Excessive fall, increasing position",
+  "Excessive rise, trimming position",
+  "Investor day in the next few weeks",
+  "Distressed event in the news",
 ]
 
 roles = ["PM", "Analyst"]
@@ -78,6 +78,8 @@ stocks = StockQuote::Stock.raw_quote(
     NOK,
     T"
 )
+
+positionTypes = ["LONG", "SHORT"]
 
 users = User.all
 
@@ -130,13 +132,16 @@ users = User.all
       sector = "diversified"
     end
 
+    positionType = positionTypes.sample
+    positionType == "LONG" ? orderType = "BUY" : orderType = "SHORT"
+
     Position.create(
       ticker: tickerData,
       user: userData,
       fund: Fund.last,
       status: "ACTIVE",
       sector: sector,
-      positionType: "LONG",
+      positionType: positionType,
     )
 
     rand(1..5).times do
@@ -155,7 +160,7 @@ users = User.all
         created_at: Faker::Date.backward(90),
         fund: Fund.last,
         user: userData,
-        tradeType: type.sample,
+        tradeType: orderType,
       )
 
       position = Position.last

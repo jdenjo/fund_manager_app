@@ -55,7 +55,8 @@
 .card-header{
 
     font-size: 16px;
-    font-weight: bold
+    font-weight: bold;
+    color: darkgrey
 
 }
 
@@ -136,3 +137,40 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif !important}
 }
 
 .form-inline div { display: inline-block }
+
+
+.card-header a:link  {
+    color: darkgrey
+  }
+  
+  .card-header a:visited {
+    color: darkgrey
+  }
+  
+  .card-header a:hover {
+    color: darkgrey;
+  }
+  
+  .card-header a:active {
+    color: darkgrey;
+  }
+
+  .card-footer a:link  {
+    color: darkgrey
+  }
+  
+  .card-footer a:visited {
+    color: darkgrey
+  }
+  
+  .card-footer a:hover {
+    color: darkgrey;
+  }
+  
+  .card-footer a:active {
+    color: darkgrey;
+  }
+
+
+  
+  
