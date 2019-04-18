@@ -54,9 +54,8 @@
 
 .card-header{
 
-    font-size: 16px;
-    font-weight: bold;
-    color: darkgrey
+    font-size: 18px;
+    color:		#686868
 
 }
 
@@ -140,19 +139,20 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif !important}
 
 
 .card-header a:link  {
-    color: darkgrey
+  color:		#686868;
+  font-weight: bold;
   }
   
   .card-header a:visited {
-    color: darkgrey
+    color:		#686868
   }
   
   .card-header a:hover {
-    color: darkgrey;
+    color:		#686868
   }
   
   .card-header a:active {
-    color: darkgrey;
+    color:		#686868
   }
 
   .card-footer a:link  {

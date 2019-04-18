@@ -83,7 +83,7 @@ positionTypes = ["LONG", "SHORT"]
 
 users = User.all
 
-4.times do |i|
+3.times do |i|
   inception = Faker::Date.backward(365 * 5)
 
   #reload new tickers for each fund
@@ -149,10 +149,16 @@ users = User.all
       price = stocks[tickerData]["quote"]["latestPrice"] * rand(0.85..1.1)
       cost = price.to_f * shares.to_f
 
+      if orderType == "SHORT"
+        transaction_shares = shares * -1
+      else
+        transaction_shares = shares
+      end
+
       Transaction.create(
         ticker: tickerData,
         price: price,
-        shares: shares,
+        shares: transaction_shares,
         cost: cost,
         position: Position.last,
         reason: reasons.sample,
@@ -164,7 +170,7 @@ users = User.all
       )
 
       position = Position.last
-      position.totalShares = (position.totalShares.to_f + shares)
+      position.totalShares = (position.totalShares.to_f + transaction_shares)
       position.averageCost = (position.averageCost.to_f + cost)
       position.averagePrice = (position.averageCost.to_f / position.totalShares.to_f)
       position.save
