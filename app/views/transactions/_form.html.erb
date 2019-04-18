@@ -1,42 +1,70 @@
-<%= form_with(model: transaction, local: true) do |form| %>
-  <% if transaction.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(transaction.errors.count, "error") %> prohibited this transaction from being saved:</h2>
+<%= simple_form_for transaction do |f| %>
 
-      <ul>
-      <% transaction.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :shares %>
-    <%= form.number_field :shares %>
+<div class="flex-grid">
+  <div class="col">
+    <%= f.input :ticker,  required:true, :readonly => true   %>
   </div>
-
-  <div class="field">
-    <%= form.label :price %>
-    <%= form.text_field :price %>
+  <div class="col">
+    <label>Company</label> <br /> <input id="company" class="form-control" type="text" readonly>
   </div>
-
-  <div class="field">
-    <%= form.label :status %>
-    <%= form.text_field :status %>
+  <div class="col">
+    <label>Exchange</label><br /> <input id="exchange" class="form-control" type="text" readonly>
   </div>
-
-  <div class="field">
-    <%= form.label :reason %>
-    <%= form.text_area :reason %>
+</div>
+<div class="flex-grid">
+  <div class="col">
+    <label>Market Cap</label> <br /> <input id="mcap" class="form-control" type="text" readonly>
   </div>
-
-  <div class="field">
-    <%= form.label :position_id %>
-    <%= form.text_field :position_id %>
+  <div class="col">
+    <label> Volume </label> <br /> <input id="vol" class="form-control" type="text" readonly>
   </div>
-
-  <div class="actions">
-    <%= form.submit %>
+  <div class="col">
+    <%= f.input :sector,  required:true, :readonly => true %>
   </div>
+</div>
+
+<div class="flex-grid">
+  <div class="col">
+    <%= f.input :user, :label => "Analyst", :label_method => :full_name, collection: @users, required: true, selected: current_user.id  %>
+  </div>
+  <div class="col">
+    <%= f.input :fund, :label => "Fund", collection: @funds, required: true %>
+  </div>
+</div>
+
+<div class="flex-grid">
+  <div class="col">
+    <%= f.input :tradeType, :label => "Buy/Short", collection: [['BUY','BUY'], ['SHORT','SHORT'] ],  required: true %>
+
+  </div>
+  <div class="col">
+    <%= f.input :shares, :label => "Number of Shares", required: true %>
+  </div>
+</div>
+
+<div class="radio-buttons">
+  <%= f.input :priceType, :label => "Order Method", collection: [['Limit','Limit'], ['Market','Market']], as: :radio_buttons, :checked => ['Market', 'Market'] %>
+</div>
+
+<div class="flex-grid">
+  <div class="col">
+    <%= f.input :price,  :label => "Price ($)", required: true, :readonly => true %>
+  </div>
+  <div class="col">
+    <%= f.input :cost, :label => "Cost ($)", :readonly => true %>
+  </div>
+</div>
+
+
+<div class="flex-grid">
+  <div class="col">
+    <%= f.input :reason, :label => "Investment Reason (Required)", required: true %>
+  </div>
+  <div class="col">
+    <%= f.input :traderInstruction, :label => "Special Instructions to Trader (Optional)" %>
+  </div>
+</div>
+<div style="padding-left: 20px">
+<%= f.button :submit, class: 'btn btn-dark' %>
+</div>
 <% end %>

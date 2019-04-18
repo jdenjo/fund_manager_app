@@ -1,0 +1,2 @@
+json.extract! stock, :id, :quote, :companyName, :primaryExchange, :sector, :calculationPrice, :open, :close, :high, :low, :latestPrice, :latestSource, :latestTime, :latestVolume, :iexRealTimePrice, :previousClose, :changePercent, :iexVolume, :avgTotalVolume, :iexBidPrice, :iexBidsize, :iexAskPrice, :iexAskSize, :marketCap, :peRatio, :week52High, :week52Low, :ytdChange, :position_id, :created_at, :updated_at
+json.url stock_url(stock, format: :json)

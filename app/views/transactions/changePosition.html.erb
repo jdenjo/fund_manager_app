@@ -1,0 +1,58 @@
+<div class="card">
+  <div class="card-header"> Change Position </div>
+  <div class="card-body">
+    <%= simple_form_for @transaction do |f| %>
+    <div class="flex-grid">
+      <div class="col">
+        <%= f.input :ticker, required: true, input_html: { value: @position.ticker,  :readonly => true  } %>
+      </div>
+      <div class="col">
+        <%= f.input :tradeType, :label => "Order Type", required: true, input_html: { value: @type,  :readonly => true  } %>
+      </div>
+      <%= f.input :position, input_html: { value: @position.id,  :readonly => true  }, :as => :hidden, required: true %>
+
+      <%= f.input :fund, input_html: { value: @position.fund.id,  :readonly => true  }, :as => :hidden,  required: true %>
+      <%= f.input :user,  input_html: { value: @position.user.id,  :readonly => true  }, :as => :hidden, required: true %>
+    </div>
+
+
+    <div class="flex-grid">
+      <div class="col">
+        <%= f.input :priceType, :label => "Execution Method", collection: [['Limit','Limit'], ['Market','Market']], as: :radio_buttons, :checked => ['Market', 'Market'] %>
+      </div>
+    </div>
+    
+        <div class="flex-grid">
+      <div class="col">
+        <%= f.input :shares, :label => "Number of Shares", required: true  %>
+        <small id="emailHelp" class="form-text text-muted">This position currently holds
+          <%= commaNumber(@position.totalShares) %> shares</small>
+      </div>
+      <div class="col">
+        <%= f.input :price,  required: true, :readonly => true , input_html: { value: @stock.latest_price } %>
+        <small id="emailHelp" class="form-text text-muted">This position currently averages
+          <%= number_to_currency(@position.averagePrice) %> per share </small>
+      </div>
+    </div>
+    <br />
+
+
+
+
+
+    <div class="flex-grid">
+      <div class="col">
+        <%= f.input :reason, :label => "Investment Reason", required: true %>
+      </div>
+      <div class="col">
+        <%= f.input :traderInstruction, :label => "Special Instructions to Trader (Optional)" %>
+      </div>
+    </div>
+    <div class="flex-grid">
+      <div class="col">
+        <%= f.button :submit, class: 'btn btn-dark' %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>

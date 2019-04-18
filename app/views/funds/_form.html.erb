@@ -11,32 +11,36 @@
     </div>
   <% end %>
 
+<div class="table">
   <div class="field">
-    <%= form.label :name %>
+    <%= form.label :name %> <br />
     <%= form.text_field :name %>
   </div>
 
   <div class="field">
-    <%= form.label :strategy %>
+    <%= form.label :strategy %> <br />
     <%= form.text_area :strategy %>
   </div>
 
   <div class="field">
-    <%= form.label :AUM %>
+    <%= form.label :AUM %> <br />
     <%= form.text_field :AUM %>
   </div>
 
   <div class="field">
-    <%= form.label :inception %>
+    <%= form.label :inception %> <br />
     <%= form.datetime_select :inception %>
   </div>
 
   <div class="field">
-    <%= form.label :user_id %>
+    <%= form.label :PM %> <br />
     <%= form.text_field :user_id %>
   </div>
+   <br />
 
   <div class="actions">
     <%= form.submit %>
+  </div>
+
   </div>
 <% end %>

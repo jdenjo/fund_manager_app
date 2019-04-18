@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-header"> Sign In </div>
+  <div class="card-body">
+
+    <%= form_with url: sessions_path, local: true do |f| %>
+      <div>
+        <%= f.label :email %> <br />
+        <%= f.email_field :email %>
+      </div>
+      <div>
+      <p></p>
+        <%= f.label :password %> <br />
+        <%= f.password_field :password %>
+      </div>
+      <br />
+      <%= f.submit "Sign In", class: "btn btn-dark" %>
+    <% end %>
+
+  </div>
+</div>
+</div>

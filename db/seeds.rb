@@ -8,6 +8,8 @@
 
 PASSWORD = "supersecret"
 
+Stock.destroy_all
+Transaction.destroy_all
 Position.destroy_all
 Fund.destroy_all
 User.destroy_all
@@ -21,9 +23,24 @@ super_user = User.create(
   role: "PM",
 )
 
-roles = ["PM", "Analyst"]
+reasons = [
+  "Earnings coming up",
+  "Increased newsflow",
+  "Trimming before earnings",
+  "Feel consensus estimates will come up",
+  "Earnings over trimming",
+  "Locking in profit after rise",
+  "Trade is too crowded, trimming",
+  "Excessive fall, increasing position",
+  "Excessive rise, trimming position",
+  "Investor day in the next few weeks",
+  "Distressed event in the news",
+]
 
-10.times do
+roles = ["PM", "Analyst"]
+type = ["BUY"]
+
+3.times do
   first_name = Faker::Name.first_name
   last_name = Faker::Name.last_name
   User.create(
@@ -36,90 +53,160 @@ roles = ["PM", "Analyst"]
 end
 
 strategies = ["Activist", "Long Short Alpha", "Fundamental Value", "small mid caps", "Alpha capture", "Distressed", "Fundamental Growth", "Multi-strategy"]
-funds = ["Fund A", "Fund B", "Fund C", "Fund D", "Fund E"]
 
-tickers = [
-  "NASDAQ :AAPL",
-  "NASDAQ: GOOG",
-  "NASDAQ: AMZN",
-  "NASDAQ: MSFT",
-  "NASDAQ: INTC",
-  "NYSE: BAC",
-  "NASDAQ: NFLX",
-  "NASDAQ: TSLA",
-  "NASDAQ: GOOGL",
-  "NYSE: GE",
-  "NYSE: NKE",
-  "NYSE: ACB",
-  "NYSE: BRK.A",
-  "NYSE: XOM",
-  "NYSE: WMT",
-  "NYSE: LUV",
-  "NYSE: C",
-  "NASDAQ: QQQ",
-  "NYSE: BRK.B",
-  "NASDAQ: AMD",
-  "NYSE: S",
-  "NYSE: TTM",
-  "NYSE: DIS",
-  "NYSE: PFE",
-  "NYSE: BA",
-  "NYSE: BABA",
-  "NYSE: CHK",
-  "NYSE: HPQ",
-  "NASDAQ: TXN",
-  "NYSE: NIO",
-  "NYSE: MMM",
-  "NASDAQ: NVDA",
-  "NASDAQ: CMCSA",
-  "NYSE: TGT",
-  "NYSE: VZ",
-  "NYSE: ECA",
-  "NASDAQ: SYMC",
-  "NYSE: MRK",
-  "NYSE: A",
-  "NASDAQ: BIDU",
-  "NYSE: PBR",
-  "NYSE: NOK",
-  "NYSE: BMY",
-  "NYSE: WFC",
-  "NASDAQ: ROKU",
-  "NASDAQ: CSCO",
-  "NYSE: SLG",
-]
+stocks = StockQuote::Stock.raw_quote(
+  "GOOG,
+    AMZN,
+    MSFT,
+    NFLX,
+    TSLA,
+    GOOGL,
+    GE,
+    NKE,
+    AMD,
+    BABA,
+    ROKU,
+    INTC,
+    PCG,
+    BAC,
+    XOM,
+    VZ,
+    GE,
+    QCOM,
+    PFE,
+    S,
+    NOK,
+    T"
+)
 
-fundAmount = funds.length - 1
+positionTypes = ["LONG", "SHORT"]
+
 users = User.all
 
-fundAmount.times do |i|
+3.times do |i|
   inception = Faker::Date.backward(365 * 5)
 
+  #reload new tickers for each fund
+  @tickers = [
+    "GOOG",
+    "AMZN",
+    "MSFT",
+    "NFLX",
+    "TSLA",
+    "GOOGL",
+    "GE",
+    "NKE",
+    "AMD",
+    "BABA",
+    "ROKU",
+    "INTC",
+    "PCG",
+    "BAC",
+    "XOM",
+    "VZ",
+    "GE",
+    "QCOM",
+    "PFE",
+    "S",
+    "NOK",
+    "T",
+  ]
+
   Fund.create(
-    name: funds[i],
+    name: Faker::Space.moon + " Fund",
     strategy: strategies[i],
-    user: users.sample,
-    AUM: rand(500000000..2000000000),
+    pm: users.sample,
+    AUM: 1000000000,
     inception: inception,
   )
 
-  10.times do
-    tickerData = tickers.sample
+  rand(10..20).times do
+    @tickers.shuffle!
+    tickerData = @tickers.last
+    @tickers.pop
     userData = users.sample
+
+    if stocks[tickerData]["quote"]["sector"] != nil
+      sector = stocks[tickerData]["quote"]["sector"]
+    else
+      sector = "diversified"
+    end
+
+    positionType = positionTypes.sample
+    positionType == "LONG" ? orderType = "BUY" : orderType = "SHORT"
 
     Position.create(
       ticker: tickerData,
-      user: users.sample,
+      user: userData,
       fund: Fund.last,
+      status: "ACTIVE",
+      sector: sector,
+      positionType: positionType,
     )
 
-    10.times do
+    rand(1..5).times do
+      shares = rand(10000000..20000000) / stocks[tickerData]["quote"]["latestPrice"]
+      price = stocks[tickerData]["quote"]["latestPrice"] * rand(0.85..1.1)
+      cost = price.to_f * shares.to_f
+
+      if orderType == "SHORT"
+        transaction_shares = shares * -1
+      else
+        transaction_shares = shares
+      end
+
       Transaction.create(
         ticker: tickerData,
-        price: rand(10..100),
-        shares: rand(1000..100000),
+        price: price,
+        shares: transaction_shares,
+        cost: cost,
         position: Position.last,
-        reason: "Catalyst upcoming",
+        reason: reasons.sample,
+        status: "ACTIVE",
+        created_at: Faker::Date.backward(90),
+        fund: Fund.last,
+        user: userData,
+        tradeType: orderType,
       )
+
+      position = Position.last
+      position.totalShares = (position.totalShares.to_f + transaction_shares)
+      position.averageCost = (position.averageCost.to_f + cost)
+      position.averagePrice = (position.averageCost.to_f / position.totalShares.to_f)
+      position.save
     end
+  end
+end
+
+for i in 0..(@tickers.length - 1)
+  if !(stocks[@tickers[i]] == nil)
+    Stock.create(
+      symbol: stocks[@tickers[i]]["quote"]["symbol"],
+      companyName: stocks[@tickers[i]]["quote"]["companyName"],
+      primaryExchange: stocks[@tickers[i]]["quote"]["primaryExchange"],
+      position: Position.last,
+      sector: stocks[@tickers[i]]["quote"]["sector"],
+      open: stocks[@tickers[i]]["quote"]["open"],
+      close: stocks[@tickers[i]]["quote"]["close"],
+      high: stocks[@tickers[i]]["quote"]["high"],
+      low: stocks[@tickers[i]]["quote"]["low"],
+      latestPrice: stocks[@tickers[i]]["quote"]["latestPrice"],
+      latestTime: stocks[@tickers[i]]["quote"]["latestTime"],
+      latestVolume: stocks[@tickers[i]]["quote"]["latestVolume"],
+      iexRealTimePrice: stocks[@tickers[i]]["quote"]["iexRealTimePrice"],
+      previousClose: stocks[@tickers[i]]["quote"]["previousClose"],
+      changePercent: stocks[@tickers[i]]["quote"]["changePercent"],
+      iexVolume: stocks[@tickers[i]]["quote"]["iexVolume"],
+      avgTotalVolume: stocks[@tickers[i]]["quote"]["avgTotalVolume"],
+      iexBidPrice: stocks[@tickers[i]]["quote"]["iexBidPrice"],
+      iexBidSize: stocks[@tickers[i]]["quote"]["iexBidSize"],
+      iexAskPrice: stocks[@tickers[i]]["quote"]["iexAskPrice"],
+      iexAskSize: stocks[@tickers[i]]["quote"]["iexAskSize"],
+      marketCap: ((stocks[@tickers[i]]["quote"]["marketCap"]).to_i / 1000000),
+      peRatio: stocks[@tickers[i]]["quote"]["peRatio"],
+      week52High: stocks[@tickers[i]]["quote"]["week52High"],
+      week52Low: stocks[@tickers[i]]["quote"]["week52Low"],
+      ytdChange: stocks[@tickers[i]]["quote"]["ytdChange"],
+    )
   end
 end

@@ -1,34 +1,31 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>First name:</strong>
-  <%= @user.first_name %>
-</p>
-
-<p>
-  <strong>Last name:</strong>
-  <%= @user.last_name %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
-  <strong>Password digest:</strong>
-  <%= @user.password_digest %>
-</p>
-
-<p>
-  <strong>Admin:</strong>
-  <%= @user.admin %>
-</p>
-
-<p>
-  <strong>Role:</strong>
-  <%= @user.role %>
-</p>
-
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+<div class="card">
+  <div class="card-header"> User Details </div>
+  <div class="card-body">
+    <div class="flex-grid">
+      <div class="col">
+        <p>
+          <strong>First name:</strong>
+          <%= @user.first_name %>
+        </p>
+        <p>
+          <strong>Last name:</strong>
+          <%= @user.last_name %>
+        </p>
+        <p>
+          <strong>Email:</strong>
+          <%= @user.email %>
+        </p>
+        <p>
+          <strong>Role:</strong>
+          <%= @user.role %>
+        </p>
+      </div>
+      <div class="col profile-pic">
+        <img width="200px"
+          src="https://www.jennstrends.com/wp-content/uploads/2013/10/bad-profile-pic-2-768x768.jpeg" />
+      </div>
+      
+    
+    </div>
+  </div>
+</div>

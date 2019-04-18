@@ -1,5 +1,13 @@
-<h1>New Position</h1>
-
-<%= render 'form', position: @position %>
-
-<%= link_to 'Back', positions_path %>
+<div class="card">
+  <div class="card-header">New Trade</div>
+  <div class="card-body">
+    <form action="/">
+      Ticker:
+      <input type="text" name="firstname" >
+      <input type="submit" value="Search">
+    </form>
+    <br />
+    <br />
+    <%= render 'form', position: @position %>
+  </div>
+</div>

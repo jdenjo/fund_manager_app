@@ -1,29 +1,70 @@
-<p id="notice"><%= notice %></p>
+    <%
 
-<p>
-  <strong>Name:</strong>
-  <%= @fund.name %>
-</p>
+exposures = {}
+aum = @positions.sum('averageCost')
 
-<p>
-  <strong>Strategy:</strong>
-  <%= @fund.strategy %>
-</p>
+@positions.each do |position|
+  if exposures.key?(position.sector)
+  sum = exposures[position.sector] + position.averageCost.round
+  exposures[position.sector] =  sum
+  else 
+    exposures[position.sector] = position.averageCost.round
+  end
+end
+%>
+<div class="card-deck">
+  <div class="card">
+    <div class="card-header">
+      Fund Details
+    </div>
+    <div class="card-body">
+      <p>
+        <strong>Name:</strong>
+        <%= @fund.name %>
+      </p>
+      <p>
+        <strong>Strategy:</strong>
+        <%= @fund.strategy %>
+      </p>
+      <p>
+        <strong>AUM:</strong>
+        <%= number_to_currency(aum, precision: 0) %>
+      </p>
+      <p>
+        <strong>Inception:</strong>
+        <%= @fund.inception.strftime("%m/%Y") %>
+      </p>
+      <p>
+        <strong>Portfolio Manager:</strong>
+        <a href="/users/<%=@fund.pm.id %>"> <%= @fund.pm.first_name + " " + @fund.pm.last_name %> </a>
+      </p>
+      <p>
+        <strong>Active Positions:</strong>
+      <%= Position.where(fund_id: @fund.id).size %>
+      </p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"> Sector Exposure </div>
 
-<p>
-  <strong>Aum:</strong>
-  <%= @fund.AUM %>
-</p>
+      <%= pie_chart exposures , library: { pieSliceText: 'value-and-percentage',  legend: "none" }  %>
+  </div>
+  <div class="card">
+  <div class="card-header">Largest Positions</div>
+  <%= bar_chart (@positions.group(:ticker).sum(:averageCost).sort_by{|_key, value| value}).last(10) %>
+  <div class="card-body"> </div>
+  </div>
+</div>
 
-<p>
-  <strong>Inception:</strong>
-  <%= @fund.inception %>
-</p>
+<div class="card">
+  <div class="card-header">
+Active Positions
+  </div>
+  <div class="card-body">
+    <%= render 'layouts/table' %>
+  </div>
 
-<p>
-  <strong>User:</strong>
-  <%= @fund.user %>
-</p>
-
-<%= link_to 'Edit', edit_fund_path(@fund) %> |
-<%= link_to 'Back', funds_path %>
+  <div class="card-footer" style="text-align: right">
+    <%= link_to 'New Trade', new_transaction_path  %>
+  </div>
+</div>

@@ -1,24 +1,51 @@
-<p id="notice"><%= notice %></p>
+<div class="flex-grid">
+  <div class="col">
+    <div class="card">
+      <div class="card-header"> Key details </div>
+      <div class="card-body">
+        <% @stock = StockQuote::Stock.raw_quote(@position.ticker)[@position.ticker]["quote"] %>
+        <strong>Ticker:</strong><%= @stock["symbol"] %> <a
+          href="https://finance.yahoo.com/quote/<%=@stock['symbol'] %>/"> (More Details)</a>
+        <hr />
+        <strong>Company:</strong><%= @stock["companyName"] %>
+        <hr />
+        <strong>Primary Exchange:</strong><%= @stock["primaryExchange"] %>
+        <hr />
+        <strong>Position:</strong><%= @position.positionType %>
+        <hr />
+        <strong>Analyst:</strong><a href="/users/<%= @position.user.id %>"> <%= @position.user.full_name %></a>
+        <hr />
 
-<p>
-  <strong>Ticker:</strong>
-  <%= @position.ticker %>
-</p>
+        <strong>Fund:</strong>
+        <a href="/funds/<%= @position.fund.id%>%"><%= @position.fund.name %></a>
+        <hr />
 
-<p>
-  <strong>Termination:</strong>
-  <%= @position.termination %>
-</p>
+        <strong>Status:</strong>
+        <%= @position.status %>
 
-<p>
-  <strong>User:</strong>
-  <%= @position.user %>
-</p>
+      </div>
+    </div>
+  </div>
 
-<p>
-  <strong>Fund:</strong>
-  <%= @position.fund %>
-</p>
+<div class="col">
 
-<%= link_to 'Edit', edit_position_path(@position) %> |
-<%= link_to 'Back', positions_path %>
+  <div class="card">
+    <div class="card-header"> YTD performance </div>
+    <div class="card-body">
+      <% data = {}%>
+      <% @stockData.chart.each do |day| %>
+      <% data[day['date']] = day['close'] %>
+      <% end %>
+      <%= line_chart data, width: "650px", height: "350px", min: (@stock['close'] * 0.8), discrete: true,  points: false, legend: false  %>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="card">
+  <div class="card-header"> Transactions </div>
+  <div class="card-body">
+    <% @transactions = @position.transactions%>
+    <%= render 'layouts/tradesTable' %>
+  </div>
+</div>
