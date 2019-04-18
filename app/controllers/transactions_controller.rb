@@ -16,11 +16,11 @@ class TransactionsController < ApplicationController
   # GET /transactions.json
   def index
     if params["id"].to_i > 0
-      @transactions = Transaction.where(user_id: params["id"]).order('created_at DESC').page(params[:page])
-      else
-      @transactions = Transaction.all.order('created_at DESC').page(params[:page])
-      end
+      @transactions = Transaction.where(user_id: params["id"]).order("created_at DESC").page(params[:page])
+    else
+      @transactions = Transaction.all.order("created_at DESC").page(params[:page])
     end
+  end
 
   # GET /transactions/1
   # GET /transactions/1.json
@@ -32,8 +32,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new
     @searchTicker = params["ticker"]
     @funds = Fund.all
-    @users = User.all 
-
+    @users = User.all
   end
 
   `                                                                                                                                                                             AAAA1aq-`
