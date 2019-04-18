@@ -28,6 +28,8 @@
             <% else %>
             <li class="nav-item active"> <%= link_to("Positions", "/positions", :class=>"nav-link")  %> </li>
             <% end %>
+
+            <li class="nav-item active"> <%= link_to("New Trade", new_transaction_path, :class=>"nav-link")  %> </li>
             
 
             <% if current_user%>

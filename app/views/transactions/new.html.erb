@@ -2,13 +2,14 @@
   <div class="card-header">New Trade</div>
   <div class="card-body">
     <form action="/" id="new-trade">
+    <div style="padding-left: 20px">
       <p><span id="search-message"></span></p>
-      Ticker<br />
-      <input type="text" name="ticker" id="ticker" class="form-control" value="<%=@searchTicker %>">
-      <br />
+      <label>Ticker</label> <br />
+      <input type="text" name="ticker" id="ticker"  value="<%=@searchTicker %>">
       <input type="submit" value="Search" class="btn btn-dark"> <br />
       <br />
     </form>
+    </div>
     <%= render 'form', transaction: @transaction %>
   </div>
 </div>
