@@ -39,7 +39,7 @@
           <td> <%= number_to_percentage(book_value/total*100, precision: 1) %> </td>
           <td><a href="/positions/<%=position.id%>"> <%= position.ticker %></a></td>
           <td><%= position.positionType%></td>
-          <td><%= number_to_currency(position.averagePrice) %></td>
+          <td><%= number_to_currency(position.averagePrice.abs) %></td>
           <td><%= number_to_currency(stock["latestPrice"]) %></td>
           <td><%= number_with_delimiter(position.totalShares, :delimiter => ',') %> </td>
           <td><%= number_to_currency(book_value/1000, precision: 0)  %></td>
