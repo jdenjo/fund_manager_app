@@ -12,8 +12,6 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new
   end
 
-  # GET /transactions
-  # GET /transactions.json
   def index
     if params["id"].to_i > 0
       @transactions = Transaction.where(user_id: params["id"]).order("created_at DESC").page(params[:page])
@@ -22,12 +20,10 @@ class TransactionsController < ApplicationController
     end
   end
 
-  # GET /transactions/1
-  # GET /transactions/1.json
+
   def show
   end
 
-  # GET /transactions/new
   def new
     @transaction = Transaction.new
     @searchTicker = params["ticker"]
@@ -35,19 +31,15 @@ class TransactionsController < ApplicationController
     @users = User.all
   end
 
-  `                                                                                                                                                                             AAAA1aq-`
-  # GET /transactions/1/edit
+
   def edit
   end
 
-  # POST /transactions
-  # POST /transactions.json
   def create
     fund = Fund.find(transaction_params["fund"])
     cost = transaction_params["price"].to_f * transaction_params["shares"].to_f.abs
     shares = 0
 
-    #see if it is a negative share or positive share transaction
     if transaction_params["tradeType"] == "SHORT" || transaction_params["tradeType"] == "SELL"
       shares = transaction_params["shares"].to_f * -1
     else
@@ -70,7 +62,6 @@ class TransactionsController < ApplicationController
       sector: transaction_params["sector"],
     )
 
-    # update the shares and price of the position
     if @transaction.tradeType == "BUY"
       positionType = "LONG"
     else
@@ -114,8 +105,6 @@ class TransactionsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /transactions/1
-  # PATCH/PUT /transactions/1.json
   def update
     respond_to do |format|
       if @transaction.update(transaction_params)
@@ -128,8 +117,6 @@ class TransactionsController < ApplicationController
     end
   end
 
-  # DELETE /transactions/1
-  # DELETE /transactions/1.json
   def destroy
     @transaction.destroy
     respond_to do |format|
@@ -140,12 +127,10 @@ class TransactionsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_transaction
     @transaction = Transaction.find(params[:id])
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
   def transaction_params
     params.require(:transaction).permit(:fund, :position, :sector, :priceType, :tradeType, :traderInstruction, :user, :shares, :price, :status, :reason, :position_id, :ticker)
   end
